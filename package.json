@@ -1,0 +1,23 @@
+{
+  "name": "snappy",
+  "version": "0.0.01",
+  "description": "Snappy App",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brancusi/snappy.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/brancusi/snappy",
+  "devDependencies": {},
+  "dependencies": {
+    "dotenv": "^1.2.0",
+    "firebase": "^2.2.9",
+    "pubnub": "^3.7.13"
+  }
+}

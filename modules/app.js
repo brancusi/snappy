@@ -221,14 +221,14 @@ mod.setupWatch = function(){
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var body = fs.createReadStream(path);
-    var name = path.substring(6);
+    var name = path.substring(8);
 
     var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: name}});
     s3obj.upload({Body: body})
     .on('httpUploadProgress', function(evt) { 
       // console.log(evt); 
     }).
-    on('httpDone', function(evt) { 
+    on('httpUploadDone', function(evt) { 
       console.log('DONE!', evt); 
     }).
     send(function(err, data) { console.log(err, data) });

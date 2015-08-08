@@ -86,6 +86,7 @@ mod.createNode = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
     var data = {name:'lone_ranger', status:'online'};
+
     nodeRef.update(data, function(error){
       if(error){
         reject(error);
@@ -101,9 +102,7 @@ mod.wakeUp = function(){
 }
 
 mod.tether = function(){
-  // gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C
   if(this.isTetheredMode()){
-    // gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C
     this.tetheredProcess = spawn('gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C');
   }
 }
@@ -131,14 +130,10 @@ mod.isTetheredMode = function(){
 
 mod.runExec = function(cmd){
   return new Promise(function(resolve, reject){
-
     var child = exec(cmd,
       function (error, stdout, stderr) {
-        console.log('stdout: ' + stdout);
-        console.log('stderr: ' + stderr);
-        resolve(stdout, stderr);
+        resolve(stdout);
         if (error !== null) {
-          console.log('exec error: ' + error);
           reject(error);
         }
     });
@@ -148,20 +143,12 @@ mod.runExec = function(cmd){
 
 mod.syncSettings = function(nodeRef){
   var self = this;
-  console.log('Step 1');
   return new Promise(function(resolve, reject){
-    console.log('Step 2');
     nodeRef.on('value', function(snapshot){
-      console.log('Step 3');
       self.unTether().then(function(){
-        console.log('Step 4');
-        snapshot.val();
-        console.log('Step 5');
-        // resolve(self.runExec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80'));
-        resolve(self.runExec('gphoto2 --set-config iso=100 shutterspeed=1/80'));
-
+        var data = snapshot.val();
+        resolve(self.runExec('gphoto2 --set-config-index iso=' + data.iso + ' shutterspeed=' + data.shutterspeed + ' aperture' + data.aperture));
       }).catch(function(error){
-        console.log('syncSettings', error);
         reject(error);
       }) 
     });
@@ -177,19 +164,3 @@ mod.bootstrap = function (){
     console.log(error);
   });
 }
-
-/*
-
-var self = this;
-  return new Promise(function(resolve, reject){
-    var itemRef = self.fbClient.child('category/' + categoryId);
-    itemRef.update({name:categoryName}, function(error){
-      if(error){
-        reject(error);
-      }else{
-        resolve();
-      }
-    });
-  });
-
- */

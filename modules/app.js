@@ -52,6 +52,7 @@ mod.subscribe = function(){
 
 mod.processGlobalMessage = function(message){
   // require('../global_commands/'+message.cmd)(message);
+  console.log('global', message);
   switch(message.cmd){
     case 'tether' :
       this.tether();
@@ -69,6 +70,7 @@ mod.processGlobalMessage = function(message){
 }
 
 mod.processNodeMessage = function(message){
+  console.log('node', message);
   switch(message.cmd){
     case 'capture' :
       this.captureImage();

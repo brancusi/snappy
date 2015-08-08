@@ -213,8 +213,8 @@ mod.setupWatch = function(){
   });
 
   watcher.on('add', function(path) { 
-    log('File', path, 'has been added'); 
-    
+    console.log('File', path, 'has been added'); 
+
     var body = fs.createReadStream(path).pipe(zlib.createGzip());
     var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'AKIAIHYKJFDG5KW7EBTA'}});
     s3obj.upload({Body: body})

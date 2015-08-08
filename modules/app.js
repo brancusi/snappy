@@ -215,12 +215,12 @@ mod.setupWatch = function(){
   watcher.on('add', function(path) { 
     console.log('File', path, 'has been added'); 
 
-    var body = fs.createReadStream(path).pipe(zlib.createGzip());
-    
-    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'AKIAJQWLH22WNJ67RWIA'}});
-    s3obj.upload({Body: body})
-    .on('httpUploadProgress', function(evt) { console.log(evt); }).
-    send(function(err, data) { console.log(err, data) });
+    // var body = fs.createReadStream(path).pipe(zlib.createGzip());
+
+    // var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'myfile'}});
+    // s3obj.upload({Body: body})
+    // .on('httpUploadProgress', function(evt) { console.log(evt); }).
+    // send(function(err, data) { console.log(err, data) });
   })
 }
 

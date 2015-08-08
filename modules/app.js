@@ -133,7 +133,7 @@ mod.createNode = function(nodeRef){
 }
 
 mod.captureImage = function(){
-  this.runExec('gphoto2 --capture-image-and-download --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
+  this.runExec('gphoto2 --capture-image-and-download --filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
 }
 
 mod.wakeUp = function(){
@@ -143,7 +143,7 @@ mod.wakeUp = function(){
 mod.tether = function(){
   if(!this.isTetheredMode()){
     try{
-      this.tetheredProcess = spawn('gphoto2', ['--capture-tethered', '--filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C']);
+      this.tetheredProcess = spawn('gphoto2', ['--capture-tethered', '--filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C']);
     }catch(err){
       console.log('Error tethering', err);
     }

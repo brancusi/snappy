@@ -207,11 +207,27 @@ mod.syncSettings = function(nodeRef){
   
 }
 
-mod.notifyUploadImageCompleted = function(){
+mod.notifyUploadImageCompleted = function(fileLocation){
+  var self = this;
+  return new Promise(function(resolve, reject){
 
+    var nodeRef = self.fbClient.child('nodes/' + process.env.RESIN_DEVICE_UUID);
+    var data = {latestFileURL:fileLocation};
+    nodeRef.update(data, function(error){
+      if(error){
+        reject(error);
+      }else{
+        console.log('All good on the file path');
+        resolve();
+      }
+    });
+
+  });
 }
 
 mod.setupWatch = function(){
+  var self = this;
+
   var watcher = chokidar.watch('pending', {
     ignored: /[\/\\]\./,
     persistent: true
@@ -228,10 +244,12 @@ mod.setupWatch = function(){
     .on('httpUploadProgress', function(evt) { 
       // console.log(evt); 
     }).
-    on('httpUploadDone', function(evt) { 
-      console.log('DONE!', evt); 
-    }).
-    send(function(err, data) { console.log(err, data) });
+    send(function(err, data) {
+      if(!err){
+        fs.unlink(path);
+        self.notifyUploadImageCompleted(data.Location);  
+      }
+    });
   })
 }
 

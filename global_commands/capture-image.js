@@ -1,1 +1,0 @@
-capture-image.js

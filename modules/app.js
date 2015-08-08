@@ -3,7 +3,8 @@ var util = require('util'),
     spawn = require('child_process').spawn,
     PubNub = require('pubnub'),
     Firebase = require('firebase'),
-    moment = require('moment');
+    moment = require('moment'),
+    Promise = require('promise');
 
 module.exports = App;
 

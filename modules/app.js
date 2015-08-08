@@ -51,11 +51,11 @@ mod.subscribe = function(){
 }
 
 mod.processGlobalMessage = function(message){
-  require('./global_commands/'+message.cmd)(message);
+  require('../global_commands/'+message.cmd)(message);
 }
 
 mod.processNodeMessage = function(message){
-  require('./node_commands/'+message.cmd)(message);
+  require('../node_commands/'+message.cmd)(message);
 }
 
 mod.syncWithFB = function(){

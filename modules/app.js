@@ -51,11 +51,32 @@ mod.subscribe = function(){
 }
 
 mod.processGlobalMessage = function(message){
-  require('../global_commands/'+message.cmd)(message);
+  // require('../global_commands/'+message.cmd)(message);
+  switch(message.cmd){
+    case 'tether' :
+      self.tether();
+      break;
+    case 'unTether' :
+      self.unTether();
+      break;
+    case 'wakeUp' :
+      self.wakeUp();
+      break;
+  }
 }
 
 mod.processNodeMessage = function(message){
-  require('../node_commands/'+message.cmd)(message);
+  switch(message.cmd){
+    case 'preview' :
+      self.previewImage();
+      break;
+    case 'capture' :
+      self.captureImage();
+      break;
+    case 'wakeUp' :
+      self.wakeUp();
+      break;
+  }
 }
 
 mod.syncWithFB = function(){
@@ -94,7 +115,6 @@ mod.createOrUpdateNode = function(){
   });
 }
 
-
 mod.createNode = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
@@ -110,13 +130,21 @@ mod.createNode = function(nodeRef){
   });
 }
 
+mod.previewImage = function(){
+  this.runExec('gphoto2 --capture-preview --filename=preview_'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
+}
+
+mod.captureImage = function(){
+  this.runExec('gphoto2 --capture-preview --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
+}
+
 mod.wakeUp = function(){
   //TODO: Send wakeup signal to camera, should be red to ground
 }
 
 mod.tether = function(){
   if(this.isTetheredMode()){
-    this.tetheredProcess = spawn('gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C');
+    this.tetheredProcess = spawn('gphoto2 --capture-tethered --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
   }
 }
 

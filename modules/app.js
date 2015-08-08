@@ -54,13 +54,13 @@ mod.processGlobalMessage = function(message){
   // require('../global_commands/'+message.cmd)(message);
   switch(message.cmd){
     case 'tether' :
-      self.tether();
+      this.tether();
       break;
     case 'unTether' :
-      self.unTether();
+      this.unTether();
       break;
     case 'wakeUp' :
-      self.wakeUp();
+      this.wakeUp();
       break;
   }
 }
@@ -68,13 +68,13 @@ mod.processGlobalMessage = function(message){
 mod.processNodeMessage = function(message){
   switch(message.cmd){
     case 'preview' :
-      self.previewImage();
+      this.previewImage();
       break;
     case 'capture' :
-      self.captureImage();
+      this.captureImage();
       break;
     case 'wakeUp' :
-      self.wakeUp();
+      this.wakeUp();
       break;
   }
 }

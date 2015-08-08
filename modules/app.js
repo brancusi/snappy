@@ -111,13 +111,13 @@ mod.tether = function(){
 mod.unTether = function(){
   var self = this;
   return new Promise(function(resolve, reject){
-    if(this.isTetheredMode()){
-      this.tetheredProcess.on('close', function (code, signal) {
+    if(self.isTetheredMode()){
+      self.tetheredProcess.on('close', function (code, signal) {
         self.tetheredProcess = null;
         resolve('Untethered ok! '+signal);
       });
 
-      this.tetheredProcess.kill();
+      self.tetheredProcess.kill();
     }else{
       resolve();
     }

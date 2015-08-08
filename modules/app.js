@@ -184,6 +184,7 @@ mod.runExec = function(cmd){
   });
 }
 
+
 mod.syncSettings = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){

@@ -133,7 +133,7 @@ mod.createNode = function(nodeRef){
 }
 
 mod.captureImage = function(){
-  this.runExec('gphoto2 --capture-image --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
+  this.runExec('gphoto2 --capture-image-and-download --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
 }
 
 mod.wakeUp = function(){

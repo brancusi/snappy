@@ -36,13 +36,26 @@ mod.subscribe = function(){
                   message:'online', 
                   status:'online'}};
 
+  var channels = 'global,'+process.env.RESIN_DEVICE_UUID;
   this.pnClient.subscribe({
-    channel  : 'global,lone_ranger',
+    channel  : channels,
     connect  : self.notify(connectMessage),
-    callback : function() {
-      console.log('Message got', arguments);
+    callback : function(message, data, channel) {
+      if(channel === 'global'){
+        self.processGlobalMessage(message);
+      }else if(channel === process.env.RESIN_DEVICE_UUID){
+        self.processNodeMessage(message);
+      }
     }
   });
+}
+
+mod.processGlobalMessage = function(message){
+  require('global_commands/'+message.cmd)(message);
+}
+
+mod.processNodeMessage = function(message){
+  require('node_commands/'+message.cmd)(message);
 }
 
 mod.syncWithFB = function(){
@@ -85,7 +98,7 @@ mod.createOrUpdateNode = function(){
 mod.createNode = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
-    var data = {name:'lone_ranger', status:'online'};
+    var data = {name:process.env.RESIN_DEVICE_UUID, status:'online'};
 
     nodeRef.update(data, function(error){
       if(error){

@@ -158,7 +158,7 @@ mod.syncSettings = function(nodeRef){
         snapshot.val();
         console.log('Step 5');
         // resolve(self.runExec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80'));
-        resolve(self.runExec('gphoto2 --set-config iso=100'));
+        resolve(self.runExec('gphoto2 --set-config iso=100 shutterspeed=1/80'));
 
       }).catch(function(error){
         console.log('syncSettings', error);

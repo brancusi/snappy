@@ -141,7 +141,7 @@ mod.wakeUp = function(){
 }
 
 mod.tether = function(){
-  if(this.isTetheredMode()){
+  if(!this.isTetheredMode()){
     this.tetheredProcess = spawn('gphoto2 --capture-tethered --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
   }
 }

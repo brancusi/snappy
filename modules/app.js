@@ -207,20 +207,29 @@ mod.syncSettings = function(nodeRef){
   
 }
 
+mod.notifyUploadImageCompleted = function(){
+
+}
+
 mod.setupWatch = function(){
   var watcher = chokidar.watch('pending', {
     persistent: true
   });
 
-  watcher.on('add', function(path) { 
-    console.log('File', path, 'has been added'); 
+  watcher.on('add', function(path, stats) { 
+    console.log('File', path, 'has been added', 'Stats: ', stats); 
 
-    // var body = fs.createReadStream(path).pipe(zlib.createGzip());
+    var body = fs.createReadStream(path);
 
-    // var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'myfile'}});
-    // s3obj.upload({Body: body})
-    // .on('httpUploadProgress', function(evt) { console.log(evt); }).
-    // send(function(err, data) { console.log(err, data) });
+    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'myfile'}});
+    s3obj.upload({Body: body})
+    .on('httpUploadProgress', function(evt) { 
+      console.log(evt); 
+    }).
+    on('httpDone', function(evt) { 
+      console.log(evt); 
+    }).
+    send(function(err, data) { console.log(err, data) });
   })
 }
 

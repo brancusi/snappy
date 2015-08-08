@@ -213,6 +213,7 @@ mod.notifyUploadImageCompleted = function(){
 
 mod.setupWatch = function(){
   var watcher = chokidar.watch('pending', {
+    ignored: /[\/\\]\./,
     persistent: true
   });
 
@@ -220,14 +221,15 @@ mod.setupWatch = function(){
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var body = fs.createReadStream(path);
+    var name = path.substring(6);
 
-    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'myfile'}});
+    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: name}});
     s3obj.upload({Body: body})
     .on('httpUploadProgress', function(evt) { 
-      console.log(evt); 
+      // console.log(evt); 
     }).
     on('httpDone', function(evt) { 
-      console.log(evt); 
+      console.log('DONE!', evt); 
     }).
     send(function(err, data) { console.log(err, data) });
   })

@@ -208,21 +208,28 @@ mod.syncSettings = function(nodeRef){
 }
 
 mod.notifyUploadImageCompleted = function(fileLocation){
-  var self = this;
-  return new Promise(function(resolve, reject){
 
-    var nodeRef = self.fbClient.child('nodes/' + process.env.RESIN_DEVICE_UUID);
-    var data = {latestFileURL:fileLocation};
-    nodeRef.update(data, function(error){
-      if(error){
-        reject(error);
-      }else{
-        console.log('All good on the file path');
-        resolve();
-      }
+  var re = /^.*\.(jpg|JPG)$/; 
+
+  if(re.test(fileLocation)){
+    console.log('Updating FB with jpg', fileLocation);
+    var self = this;
+    return new Promise(function(resolve, reject){
+
+      var nodeRef = self.fbClient.child('nodes/' + process.env.RESIN_DEVICE_UUID);
+      var data = {latestFileURL:fileLocation};
+      nodeRef.update(data, function(error){
+        if(error){
+          reject(error);
+        }else{
+          console.log('All good on the file path');
+          resolve();
+        }
+      });
+
     });
 
-  });
+  }
 }
 
 mod.setupWatch = function(){

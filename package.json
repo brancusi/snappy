@@ -16,6 +16,8 @@
   "homepage": "https://github.com/brancusi/snappy",
   "devDependencies": {},
   "dependencies": {
+    "aws-sdk": "^2.1.44",
+    "chokidar": "^1.0.5",
     "dotenv": "^1.2.0",
     "firebase": "^2.2.9",
     "moment": "^2.10.6",

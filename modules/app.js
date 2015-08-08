@@ -4,7 +4,11 @@ var util = require('util'),
     PubNub = require('pubnub'),
     Firebase = require('firebase'),
     moment = require('moment'),
-    Promise = require('promise');
+    Promise = require('promise'),
+    chokidar = require('chokidar'),
+    fs = require('fs'),
+    AWS = require('aws-sdk'),
+    zlib = require('zlib');
 
 module.exports = App;
 
@@ -121,7 +125,7 @@ mod.createOrUpdateNode = function(){
 mod.createNode = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
-    var data = {name:process.env.RESIN_DEVICE_UUID, status:'online'};
+    var data = {name:process.env.RESIN_DEVICE_UUID, swarm:process.env.SWARM_ID, status:'online'};
 
     nodeRef.update(data, function(error){
       if(error){
@@ -203,7 +207,24 @@ mod.syncSettings = function(nodeRef){
   
 }
 
+mod.setupWatch = function(){
+  var watcher = chokidar.watch('pending', {
+    persistent: true
+  });
+
+  watcher.on('add', function(path) { 
+    log('File', path, 'has been added'); 
+    
+    var body = fs.createReadStream(path).pipe(zlib.createGzip());
+    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: 'AKIAIHYKJFDG5KW7EBTA'}});
+    s3obj.upload({Body: body})
+    .on('httpUploadProgress', function(evt) { console.log(evt); }).
+    send(function(err, data) { console.log(err, data) });
+  })
+}
+
 mod.bootstrap = function (){
+  this.setupWatch();
   this.subscribe();
   this.syncWithFB().then(function(response){
     console.log('Success yo!');

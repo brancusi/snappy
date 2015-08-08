@@ -127,14 +127,38 @@ mod.isTetheredMode = function(){
   return (this.tetheredProcess !== null && this.tetheredProcess !== undefined);
 }
 
+mod.runExec = function(cmd){
+  return new Promise(function(resolve, reject){
+
+    var child = exec(cmd,
+      function (error, stdout, stderr) {
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        resolve(stdout, stderr);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+          reject(error);
+        }
+    });
+
+  });
+}
+
 mod.syncSettings = function(nodeRef){
   var self = this;
-  nodeRef.on('value', function(snapshot){
-    this.unTether().then(function(){
-      snapshot.val();
-      exec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80');
-    }) 
-  });
+
+  return new Promise(function(resolve, reject){
+    nodeRef.on('value', function(snapshot){
+      this.unTether().then(function(){
+        snapshot.val();
+        resolve(self.runExec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80'));
+      }).catch(function(error){
+        console.log(error);
+        reject(error);
+      }) 
+    });
+  })
+  
 }
 
 mod.bootstrap = function (){

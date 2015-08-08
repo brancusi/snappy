@@ -109,9 +109,11 @@ mod.tether = function(){
 }
 
 mod.unTether = function(){
+  var self = this;
   return new Promise(function(resolve, reject){
     if(this.isTetheredMode()){
       this.tetheredProcess.on('close', function (code, signal) {
+        self.tetheredProcess = null;
         resolve('Untethered ok! '+signal);
       });
 
@@ -149,9 +151,11 @@ mod.syncSettings = function(nodeRef){
 
   return new Promise(function(resolve, reject){
     nodeRef.on('value', function(snapshot){
-      this.unTether().then(function(){
+      self.unTether().then(function(){
+
         snapshot.val();
         resolve(self.runExec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80'));
+        
       }).catch(function(error){
         console.log(error);
         reject(error);

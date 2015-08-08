@@ -188,6 +188,7 @@ mod.syncSettings = function(nodeRef){
     nodeRef.on('value', function(snapshot){
       self.unTether().then(function(){
         var data = snapshot.val();
+        console.log(data);
         resolve(self.runExec('gphoto2 --set-config-index iso=' + data.iso + ' shutterspeed=' + data.shutterspeed + ' aperture' + data.aperture));
       }).catch(function(error){
         reject(error);

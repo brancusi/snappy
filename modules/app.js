@@ -1,7 +1,9 @@
 var util = require('util'),  
     exec = require('child_process').exec,
+    spawn = require('child_process').spawn,
     PubNub = require('pubnub'),
-    Firebase = require('firebase');
+    Firebase = require('firebase'),
+    moment = require('moment');
 
 module.exports = App;
 
@@ -29,14 +31,14 @@ mod.notify = function(data){
 
 mod.subscribe = function(){
   var self = this;
-  var data = { channel:'node_feedback', 
+  var connectMessage = { channel:'node_feedback', 
                   message:{node:'lone_ranger', 
                   message:'online', 
                   status:'online'}};
 
   this.pnClient.subscribe({
     channel  : 'global,lone_ranger',
-    connect  : self.notify(data),
+    connect  : self.notify(connectMessage),
     callback : function(response) {
       console.log('Message got', response);
     }
@@ -94,11 +96,44 @@ mod.createNode = function(nodeRef){
   });
 }
 
+mod.wakeUp = function(){
+  //TODO: Send wakeup signal to camera, should be red to ground
+}
+
+mod.tether = function(){
+  // gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C
+  if(this.isTetheredMode()){
+    // gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C
+    this.tetheredProcess = spawn('gphoto2 --capture-tethered --filename=lone_ranger_%m_%d_%y_%H_%M_%S.%C');
+  }
+}
+
+mod.unTether = function(){
+  return new Promise(function(resolve, reject){
+    if(this.isTetheredMode()){
+      this.tetheredProcess.on('close', function (code, signal) {
+        resolve('Untethered ok! '+signal);
+      });
+
+      this.tetheredProcess.kill();
+    }else{
+      resolve();
+    }
+  });
+  
+}
+
+mod.isTetheredMode = function(){
+  return (this.tetheredProcess !== null && this.tetheredProcess !== undefined);
+}
+
 mod.syncSettings = function(nodeRef){
+  var self = this;
   nodeRef.on('value', function(snapshot){
-    console.log(snapshot.val());
-    //TODO : set config
-    // exec('gphoto2 --set-config');
+    this.unTether().then(function(){
+      snapshot.val();
+      exec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80');
+    }) 
   });
 }
 

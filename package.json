@@ -18,6 +18,7 @@
   "dependencies": {
     "dotenv": "^1.2.0",
     "firebase": "^2.2.9",
+    "moment": "^2.10.6",
     "pubnub": "^3.7.13"
   }
 }

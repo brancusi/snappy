@@ -39,8 +39,8 @@ mod.subscribe = function(){
   this.pnClient.subscribe({
     channel  : 'global,lone_ranger',
     connect  : self.notify(connectMessage),
-    callback : function(response, channel) {
-      console.log('Message got', response, channel);
+    callback : function() {
+      console.log('Message got', arguments);
     }
   });
 }

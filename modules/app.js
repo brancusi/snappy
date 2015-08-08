@@ -148,12 +148,15 @@ mod.runExec = function(cmd){
 
 mod.syncSettings = function(nodeRef){
   var self = this;
-
+  console.log('Step 1');
   return new Promise(function(resolve, reject){
+    console.log('Step 2');
     nodeRef.on('value', function(snapshot){
+      console.log('Step 3');
       self.unTether().then(function(){
-
+        console.log('Step 4');
         snapshot.val();
+        console.log('Step 5');
         resolve(self.runExec('gphoto2 --set-config iso=100 aperture=4.5 shutterspeed=1/80'));
 
       }).catch(function(error){

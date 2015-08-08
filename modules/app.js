@@ -62,14 +62,14 @@ mod.processGlobalMessage = function(message){
     case 'wakeUp' :
       this.wakeUp();
       break;
+    case 'capture' :
+      this.captureImage();
+      break;
   }
 }
 
 mod.processNodeMessage = function(message){
   switch(message.cmd){
-    case 'preview' :
-      this.previewImage();
-      break;
     case 'capture' :
       this.captureImage();
       break;
@@ -130,10 +130,6 @@ mod.createNode = function(nodeRef){
   });
 }
 
-mod.previewImage = function(){
-  this.runExec('gphoto2 --capture-preview --filename=preview_'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
-}
-
 mod.captureImage = function(){
   this.runExec('gphoto2 --capture-image --filename='+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
 }
@@ -189,7 +185,8 @@ mod.syncSettings = function(nodeRef){
       self.unTether().then(function(){
         var data = snapshot.val();
         console.log(data);
-        resolve(self.runExec('gphoto2 --set-config-index iso=' + data.iso + ' shutterspeed=' + data.shutterspeed + ' aperture' + data.aperture));
+        var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso + ' --set-config-index shutterspeed=' + data.shutterspeed + ' --set-config-index aperture' + data.aperture
+        resolve(self.runExec(cmdStr));
       }).catch(function(error){
         reject(error);
       }) 

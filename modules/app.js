@@ -40,7 +40,7 @@ mod.subscribe = function(){
     channel  : 'global,lone_ranger',
     connect  : self.notify(connectMessage),
     callback : function(response, channel) {
-      console.log('Message got', response);
+      console.log('Message got', response, channel);
     }
   });
 }

@@ -80,6 +80,12 @@ mod.processNodeMessage = function(message){
     case 'capture' :
       this.captureImage();
       break;
+    case 'tether' :
+      this.tether();
+      break;
+    case 'unTether' :
+      this.unTether();
+      break;
     case 'wakeUp' :
       this.wakeUp();
       break;

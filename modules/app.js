@@ -37,7 +37,7 @@ mod.notify = function(data){
 mod.subscribe = function(){
   var self = this;
   var connectMessage = { channel:'node_feedback', 
-                  message:{node:'lone_ranger', 
+                  message:{node:process.env.RESIN_DEVICE_UUID, 
                   message:'online', 
                   status:'online'}};
 

@@ -8,7 +8,8 @@ var util = require('util'),
     chokidar = require('chokidar'),
     fs = require('fs'),
     AWS = require('aws-sdk'),
-    zlib = require('zlib');
+    zlib = require('zlib'),
+    gpio = require('rpi-gpio');
 
 module.exports = App;
 
@@ -71,6 +72,9 @@ mod.processGlobalMessage = function(message){
     case 'capture' :
       this.captureImage();
       break;
+    case 'captureTethered' :
+      this.captureTethered();
+      break;
   }
 }
 
@@ -88,6 +92,9 @@ mod.processNodeMessage = function(message){
       break;
     case 'wakeUp' :
       this.wakeUp();
+      break;
+    case 'captureTethered' :
+      this.captureTethered();
       break;
   }
 }
@@ -145,6 +152,10 @@ mod.createNode = function(nodeRef){
 
 mod.captureImage = function(){
   this.runExec('gphoto2 --capture-image-and-download --filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
+}
+
+mod.shootTethered = function(){
+
 }
 
 mod.wakeUp = function(){
@@ -237,6 +248,30 @@ mod.notifyUploadImageCompleted = function(fileLocation){
   }
 }
 
+mod.setupGPIO = function(){
+  gpio.setup(14, gpio.DIR_OUT, write);
+}
+
+mod.captureTethered = function(){
+  gpio.write(14, true, function(err) {
+      if (err) {
+        console.log('Err', err);
+      }else{
+        console.log('Written to pin');
+      }
+  });
+
+  setTimeout(function() {
+      gpio.write(14, false, function(err){
+        if (err) {
+          console.log('Err', err);
+        }else{
+          console.log('Shut off pin');
+        }
+      });
+  }, 50);
+}
+
 mod.setupWatch = function(){
   var self = this;
 
@@ -266,6 +301,7 @@ mod.setupWatch = function(){
 }
 
 mod.bootstrap = function (){
+  this.setupGPIO();
   this.setupWatch();
   this.subscribe();
   this.syncWithFB().then(function(response){

@@ -9,7 +9,7 @@ var util = require('util'),
     fs = require('fs'),
     AWS = require('aws-sdk'),
     zlib = require('zlib'),
-    gpio = require('rpi-gpio');
+    GPIO = require('pi-pins');
 
 module.exports = App;
 
@@ -249,26 +249,15 @@ mod.notifyUploadImageCompleted = function(fileLocation){
 }
 
 mod.setupGPIO = function(){
-  gpio.setup(14);
+  this.shutterPin = GPIO.connect(14);
 }
 
 mod.captureTethered = function(){
-  gpio.write(14, true, function(err) {
-      if (err) {
-        console.log('Err', err);
-      }else{
-        console.log('Written to pin');
-      }
-  });
+  var self = this;
+  this.shutterPin.mode('high');
 
   setTimeout(function() {
-      gpio.write(14, false, function(err){
-        if (err) {
-          console.log('Err', err);
-        }else{
-          console.log('Shut off pin');
-        }
-      });
+      self.shutterPin.mode('low');
   }, 50);
 }
 

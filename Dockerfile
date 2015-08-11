@@ -5,11 +5,13 @@ RUN npm install pm2 -g
 RUN apt-get update && apt-get install -y \
   gphoto2
 
+COPY package.json /app/package.json
+
+RUN cd /app; npm install
+
 COPY . /app
 
 WORKDIR /app
-
-RUN npm install
 
 ENV INITSYSTEM on
 

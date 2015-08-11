@@ -21,6 +21,7 @@
     "dotenv": "^1.2.0",
     "firebase": "^2.2.9",
     "moment": "^2.10.6",
+    "pi-pins": "^1.0.2",
     "promise": "^7.0.4",
     "pubnub": "^3.7.13",
     "rpi-gpio": "^0.6.0"

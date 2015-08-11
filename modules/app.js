@@ -249,7 +249,7 @@ mod.notifyUploadImageCompleted = function(fileLocation){
 }
 
 mod.setupGPIO = function(){
-  gpio.setup(14, gpio.DIR_OUT, write);
+  gpio.setup(14);
 }
 
 mod.captureTethered = function(){

@@ -254,10 +254,14 @@ mod.setupGPIO = function(){
 
 mod.captureTethered = function(){
   var self = this;
+  var startTime = moment();
+  console.log('Will set to high');
+
   this.shutterPin.mode('high');
 
   setTimeout(function() {
-      self.shutterPin.mode('low');
+    console.log('Will set to low', startTime.diff(moment());
+    self.shutterPin.mode('low');
   }, 50);
 }
 

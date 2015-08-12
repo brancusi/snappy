@@ -59,15 +59,12 @@ mod.subscribe = function(){
 mod.processGlobalMessage = function(message){
   // require('../global_commands/'+message.cmd)(message);
   console.log('global', message);
-  switch(message.cmd){
+  switch('global', message.cmd){
     case 'tether' :
       this.tether();
       break;
     case 'unTether' :
       this.unTether();
-      break;
-    case 'wakeUp' :
-      this.wakeUp();
       break;
     case 'capture' :
       this.captureImage();
@@ -79,7 +76,7 @@ mod.processGlobalMessage = function(message){
 }
 
 mod.processNodeMessage = function(message){
-  console.log('node', message);
+  console.log('node', message.cmd);
   switch(message.cmd){
     case 'capture' :
       this.captureImage();
@@ -89,9 +86,6 @@ mod.processNodeMessage = function(message){
       break;
     case 'unTether' :
       this.unTether();
-      break;
-    case 'wakeUp' :
-      this.wakeUp();
       break;
     case 'captureTethered' :
       this.captureTethered();
@@ -154,14 +148,6 @@ mod.captureImage = function(){
   this.runExec('gphoto2 --capture-image-and-download --filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C');
 }
 
-mod.shootTethered = function(){
-
-}
-
-mod.wakeUp = function(){
-  //TODO: Send wakeup signal to camera, should be red to ground
-}
-
 mod.tether = function(){
   if(!this.isTetheredMode()){
     try{
@@ -207,12 +193,12 @@ mod.runExec = function(cmd){
 }
 
 mod.syncSettings = function(nodeRef){
+  console.log('something changed lets sync');
   var self = this;
   return new Promise(function(resolve, reject){
     nodeRef.on('value', function(snapshot){
       self.unTether().then(function(){
         var data = snapshot.val();
-        console.log(data);
         var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso + ' --set-config-index shutterspeed=' + data.shutterspeed + ' --set-config-index aperture' + data.aperture
         resolve(self.runExec(cmdStr));
       }).catch(function(error){

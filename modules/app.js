@@ -250,6 +250,7 @@ mod.notifyUploadImageCompleted = function(fileLocation){
 
 mod.setupGPIO = function(){
   this.shutterPin = GPIO.connect(14);
+  this.shutterPin.mode('low');
 }
 
 mod.captureTethered = function(){
@@ -260,7 +261,7 @@ mod.captureTethered = function(){
   this.shutterPin.mode('high');
 
   setTimeout(function() {
-    console.log('Will set to low', startTime.diff(moment());
+    console.log('Will set to low', startTime.diff(moment()));
     self.shutterPin.mode('low');
   }, 50);
 }

@@ -145,21 +145,22 @@ mod.createNode = function(nodeRef){
 }
 
 mod.captureImage = function(){
-  this.runExec('gphoto2 --capture-image-and-download --filename=' + this.generateFileName('pending'));
+  this.runExec('gphoto2 --capture-image-and-download' + this.fileNameFlag('pending'));
 }
 
-mod.generateFileName = function(type){
+mod.fileNameFlag = function(type){
   switch(type){
     'pending':
-      return 'pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
-      break;
+      return ' --filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+    break;
   }
 }
 
 mod.tether = function(){
+
   if(!this.isTetheredMode()){
     try{
-      var gPhoto2 = spawn('gphoto2', ['--capture-tethered', '--filename=' + this.generateFileName('pending')]);
+      var gPhoto2 = spawn('gphoto2', ['--capture-tethered', this.fileNameFlag('pending')]);
 
       gPhoto2.stdout.on('data', function (data) {
         console.log('stdout: ' + data);

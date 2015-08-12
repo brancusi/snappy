@@ -150,7 +150,7 @@ mod.captureImage = function(){
 
 mod.fileNameFlag = function(type){
   switch(type){
-    'pending':
+    case 'pending':
       return ' --filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }

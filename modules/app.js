@@ -180,15 +180,20 @@ mod.tether = function(){
 
 mod.unTether = function(){
   var self = this;
+  console.log('Entered unTether');
   return new Promise(function(resolve, reject){
     if(self.isTetheredMode()){
+      console.log('Is tethered and will now untether');
       self.tetheredProcess.on('close', function (code, signal) {
         self.tetheredProcess = null;
+        console.log('Untethered! Will resolve');
         resolve('Untethered ok! '+signal);
       });
 
+      console.log('tethered and will now kill process');
       self.tetheredProcess.kill();
     }else{
+      console.log('not tethered and will now resolve');
       resolve();
     }
   });
@@ -217,7 +222,9 @@ mod.syncSettings = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
     nodeRef.on('value', function(snapshot){
+
       console.log('something changed lets sync', snapshot.val());    
+      
       self.unTether().then(function(){
         console.log('Untethered');
         var data = snapshot.val();

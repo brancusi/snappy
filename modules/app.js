@@ -151,7 +151,18 @@ mod.captureImage = function(){
 mod.tether = function(){
   if(!this.isTetheredMode()){
     try{
-      this.tetheredProcess = spawn('gphoto2', ['--capture-tethered', '--filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C']);
+      var process = spawn('gphoto2', ['--capture-tethered', '--filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C']);
+
+      process.stdout.on('data', function (data) {
+        console.log('stdout: ' + data);
+      });
+
+      process.stderr.on('data', function (data) {
+        console.log('stderr: ' + data);
+      });
+
+      this.tetheredProcess = process;
+
     }catch(err){
       console.log('Error tethering', err);
     }

@@ -193,15 +193,18 @@ mod.runExec = function(cmd){
 }
 
 mod.syncSettings = function(nodeRef){
-  console.log('something changed lets sync');
+  
   var self = this;
   return new Promise(function(resolve, reject){
     nodeRef.on('value', function(snapshot){
+      console.log('something changed lets sync', snapshot.val());    
       self.unTether().then(function(){
+        console.log('Untethered');
         var data = snapshot.val();
         var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso + ' --set-config-index shutterspeed=' + data.shutterspeed + ' --set-config-index aperture' + data.aperture
         resolve(self.runExec(cmdStr));
       }).catch(function(error){
+        console.log('Couldnt untether');
         reject(error);
       }) 
     });

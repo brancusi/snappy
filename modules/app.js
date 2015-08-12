@@ -190,8 +190,14 @@ mod.unTether = function(){
         resolve('Untethered ok! '+signal);
       });
 
+      self.tetheredProcess.on('SIGINT', function (code, signal) {
+        self.tetheredProcess = null;
+        console.log('Untethered! Will resolve');
+        resolve('Untethered ok! '+signal);
+      });
+
       console.log('tethered and will now kill process');
-      self.tetheredProcess.kill();
+      self.tetheredProcess.kill('SIGINT');
     }else{
       console.log('not tethered and will now resolve');
       resolve();
@@ -224,7 +230,7 @@ mod.syncSettings = function(nodeRef){
     nodeRef.on('value', function(snapshot){
 
       console.log('something changed lets sync', snapshot.val());    
-      
+
       self.unTether().then(function(){
         console.log('Untethered');
         var data = snapshot.val();

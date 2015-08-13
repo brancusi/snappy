@@ -8,8 +8,8 @@ var util = require('util'),
     chokidar = require('chokidar'),
     fs = require('fs'),
     AWS = require('aws-sdk'),
-    zlib = require('zlib'),
-    GPIO = require('pi-pins');
+    zlib = require('zlib');
+    // GPIO = require('pi-pins');
 
 module.exports = App;
 
@@ -302,12 +302,12 @@ mod.captureTethered = function(){
 mod.setupWatch = function(){
   var self = this;
 
-  var watcher = chokidar.watch('pending', {
+  var thumbWatch = chokidar.watch('pending/*.jpg', {
     ignored: /[\/\\]\./,
     persistent: true
   });
 
-  watcher.on('add', function(path, stats) { 
+  thumbWatch.on('add', function(path, stats) { 
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var body = fs.createReadStream(path);
@@ -324,11 +324,40 @@ mod.setupWatch = function(){
         self.notifyUploadImageCompleted(data.Location);  
       }
     });
-  })
+  });
+
+  var rawWatch = chokidar.watch('pending/*.NEF', {
+    ignored: /[\/\\]\./,
+    persistent: true
+  });
+
+  rawWatch.on('add', function(path, stats) { 
+    console.log('File', path, 'has been added', 'Stats: ', stats); 
+
+    self.runExec('dcraw -e' + path);
+
+    // var body = fs.createReadStream(path);
+    // var name = path.substring(8);
+
+    // var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: name}});
+    // s3obj.upload({Body: body})
+    // .on('httpUploadProgress', function(evt) { 
+    //   // console.log(evt); 
+    // }).
+    // send(function(err, data) {
+    //   if(!err){
+    //     fs.unlink(path);
+    //     self.notifyUploadImageCompleted(data.Location);  
+    //   }
+    // });
+  });
+
 }
 
+
+
 mod.bootstrap = function (){
-  this.setupGPIO();
+  // this.setupGPIO();
   this.setupWatch();
   this.subscribe();
   this.syncWithFB().then(function(response){

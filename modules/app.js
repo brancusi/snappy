@@ -346,12 +346,11 @@ mod.setupWatch = function(){
   thumbnailWatch.on('add', function(path, stats) { 
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
+    var name = path.substring(8, path.indexOf('.'));
 
-    fs.unlink(path);
+    self.runExec('convert ' + path + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
     
-    // var cleanedPath = path.substring(0, path.indexOf('.'));
-    // var name = cleanedPath.substring(8);
-    // var thumbName = name + '.thumb.jpg';
+    fs.unlink(path);
 
     // self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
     // try {

@@ -326,7 +326,7 @@ mod.setupWatch = function(){
     });
   });
 
-  var rawWatch = chokidar.watch('pending/*.NEF', {
+  var rawWatch = chokidar.watch('pending/*.nef', {
     ignored: /[\/\\]\./,
     persistent: true
   });

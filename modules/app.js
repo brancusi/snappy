@@ -343,7 +343,7 @@ mod.setupWatch = function(){
 
     self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
     try {
-      fs.unlink('pending/' + thumbName);
+      // fs.unlink('pending/' + thumbName);
     }catch(err){
       console.log(err);
     }

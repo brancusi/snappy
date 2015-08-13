@@ -340,7 +340,7 @@ mod.setupWatch = function(){
     var name = path.substring(0, path.indexOf('.'));
     var thumbName = name + '.thumb.jpg';
 
-    self.runExec('convert ' + thumbName + ' -resize 10% ' + 'preview/' + name + '.jpg');
+    self.runExec('convert ' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
     fs.unlink(thumbName);
 
     // var body = fs.createReadStream(path);

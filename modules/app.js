@@ -337,11 +337,12 @@ mod.setupWatch = function(){
 
     self.runExec('dcraw -e ' + path);
 
-    var name = path.substring(0, path.indexOf('.'));
+    var cleanedPath = path.substring(0, path.indexOf('.'));
+    var name = cleanedPath.substring(8);
     var thumbName = name + '.thumb.jpg';
 
-    self.runExec('convert ' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
-    fs.unlink(thumbName);
+    self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
+    fs.unlink('pending/' + thumbName);
 
     // var body = fs.createReadStream(path);
     // var name = path.substring(8);

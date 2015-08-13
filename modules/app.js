@@ -339,7 +339,7 @@ mod.setupWatch = function(){
 
     var name = path.substring(0, path.indexOf('.'));
     var thumbName = name + '.thumb.jpg';
-    self.runExec('convert -size 320x90 ' + thumbName + ' ' + name + '_preview.jpg');
+    self.runExec('convert ' + thumbName + ' -resize 10% ' + name + '_preview.jpg');
 
     // var body = fs.createReadStream(path);
     // var name = path.substring(8);

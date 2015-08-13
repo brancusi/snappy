@@ -340,7 +340,7 @@ mod.setupWatch = function(){
     self.runExec('dcraw -e ' + path);
   });
 
-  var thumbnailWatch = chokidar.watch('pending/*thumb.jpg', {
+  var thumbnailWatch = chokidar.add('pending/*thumb.jpg', {
     ignored: /[\/\\]\./,
     persistent: true
   });

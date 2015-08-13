@@ -222,6 +222,7 @@ mod.isTetheredMode = function(){
 }
 
 mod.runExec = function(cmd){
+  console.log('cmd', cmd);
   return new Promise(function(resolve, reject){
     var child = exec(cmd,
       function (error, stdout, stderr) {

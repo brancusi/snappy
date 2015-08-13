@@ -334,7 +334,7 @@ mod.setupWatch = function(){
   rawWatch.on('add', function(path, stats) { 
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
-    self.runExec('dcraw -e' + path);
+    self.runExec('dcraw -e ' + path);
 
     // var body = fs.createReadStream(path);
     // var name = path.substring(8);

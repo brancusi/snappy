@@ -350,7 +350,7 @@ mod.setupWatch = function(){
 
     self.runExec('convert ' + path + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
 
-    fs.unlink(path);
+    // fs.unlink(path);
 
     // self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
     // try {

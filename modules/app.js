@@ -303,7 +303,7 @@ mod.captureTethered = function(){
 mod.setupWatch = function(){
   var self = this;
 
-  var thumbWatch = chokidar.watch('pending/*.jpg', {
+  var thumbWatch = chokidar.watch('pending/preview/*.jpg', {
     ignored: /[\/\\]\./,
     persistent: true
   });
@@ -336,6 +336,10 @@ mod.setupWatch = function(){
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     self.runExec('dcraw -e ' + path);
+
+    var name = path.substring(0, path.indexOf('.'));
+    var thumbName = name + '.thumb.jpg';
+    self.runExec('convert -size 320x90 ' + thumbName + ' ' + name + '_preview.jpg');
 
     // var body = fs.createReadStream(path);
     // var name = path.substring(8);

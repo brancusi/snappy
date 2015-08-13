@@ -4,7 +4,8 @@ RUN npm install pm2 -g
 
 RUN apt-get update && apt-get install -y \
   gphoto2 \
-  dcraw
+  dcraw \
+  imagemagick
 
 COPY package.json /app/package.json
 

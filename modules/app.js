@@ -336,17 +336,29 @@ mod.setupWatch = function(){
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     self.runExec('dcraw -e ' + path);
+  });
 
-    var cleanedPath = path.substring(0, path.indexOf('.'));
-    var name = cleanedPath.substring(8);
-    var thumbName = name + '.thumb.jpg';
+  var thumbnailWatch = chokidar.watch('pending/*thumb.jpg', {
+    ignored: /[\/\\]\./,
+    persistent: true
+  });
 
-    self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
-    try {
-      // fs.unlink('pending/' + thumbName);
-    }catch(err){
-      console.log(err);
-    }
+  thumbnailWatch.on('add', function(path, stats) { 
+    console.log('File', path, 'has been added', 'Stats: ', stats); 
+
+
+    fs.unlink(path);
+    
+    // var cleanedPath = path.substring(0, path.indexOf('.'));
+    // var name = cleanedPath.substring(8);
+    // var thumbName = name + '.thumb.jpg';
+
+    // self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
+    // try {
+    //   // fs.unlink('pending/' + thumbName);
+    // }catch(err){
+    //   console.log(err);
+    // }
 
     // var body = fs.createReadStream(path);
     // var name = path.substring(8);

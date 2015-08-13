@@ -1,19 +1,21 @@
 FROM nghiant2710/rpi-node
 
-RUN npm install pm2 -g
-
 RUN apt-get update && apt-get install -y \
-  gphoto2 \
   dcraw \
+  gphoto2 \
   imagemagick
 
-COPY package.json /app/package.json
+ENV APP_DIR /app
 
-RUN cd /app; npm install
+COPY package.json $APP_DIR/package.json
 
-COPY . /app
+RUN cd $APP_DIR; npm install
 
-WORKDIR /app
+COPY . $APP_DIR
+
+WORKDIR $APP_DIR
+
+VOLUME /data
 
 ENV INITSYSTEM on
 

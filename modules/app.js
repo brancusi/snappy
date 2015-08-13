@@ -145,13 +145,13 @@ mod.createNode = function(nodeRef){
 }
 
 mod.captureImage = function(){
-  this.runExec('gphoto2 --capture-image-and-download ' + this.fileNameFlag('pending'));
+  this.runExec('gphoto2 --capture-image-and-download ' + this.fileNameFlag('new'));
 }
 
 mod.fileNameFlag = function(type){
   switch(type){
-    case 'pending':
-      return '--filename=pending/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+    case 'new':
+      return '--filename=data/new/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }
 }
@@ -169,9 +169,7 @@ mod.tether = function(){
         ]
       }
 
-      var gPhoto2 = spawn('gphoto2', ['--capture-tethered', this.fileNameFlag('pending')], options);
-
-
+      var gPhoto2 = spawn('gphoto2', ['--capture-tethered', this.fileNameFlag('new')], options);
 
       gPhoto2.stdout.on('data', function (data) {
         console.log('stdout: ' + data);
@@ -303,12 +301,25 @@ mod.captureTethered = function(){
 mod.setupWatch = function(){
   var self = this;
 
-  var previewWatch = chokidar.watch('pending/preview/*.jpg', {
-    ignored: /[\/\\]\./,
+  this.debugWatch = chokidar.watch(['/data/new/'], {
     persistent: true
+  }).on('add', function(path, stats) { 
+    console.log('DEBUG: File', path, 'has been added');
   });
 
-  previewWatch.on('add', function(path, stats) { 
+  // Watch for new raw files
+  this.rawWatch = chokidar.watch(['/data/new/*.nef', '/data/new/*.NEF'], {
+    ignored: /[\/\\]\./,
+    persistent: true
+  }).on('add', function(path, stats) { 
+    console.log('File', path, 'has been added', 'Stats: ', stats); 
+    self.runExec('dcraw -e ' + path);
+  });
+
+  this.previewWatch = chokidar.watch('data/preview/*.jpg', {
+    ignored: /[\/\\]\./,
+    persistent: true
+  }).on('add', function(path, stats) { 
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var body = fs.createReadStream(path);
@@ -323,63 +334,26 @@ mod.setupWatch = function(){
     send(function(err, data) {
       if(!err){
         fs.unlink(path);
-        fs.unlink('pending/'+name+'.thumb.jpg');
+        fs.unlink('data/'+name+'.thumb.jpg');
         self.notifyUploadImageCompleted(data.Location);  
       }
     });
   });
 
-  var rawWatch = chokidar.watch(['pending/*.nef', 'pending/*.NEF'], {
+  
+
+  this.thumbnailWatch = chokidar.watch('data/*thumb.jpg', {
     ignored: /[\/\\]\./,
     persistent: true
-  });
-
-  rawWatch.on('add', function(path, stats) { 
-    console.log('File', path, 'has been added', 'Stats: ', stats); 
-
-    self.runExec('dcraw -e ' + path);
-  });
-
-  var thumbnailWatch = chokidar.watch('pending/*thumb.jpg', {
-    ignored: /[\/\\]\./,
-    persistent: true
-  });
-
-  thumbnailWatch.on('add', function(path, stats) { 
+  }).on('add', function(path, stats) { 
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var name = path.substring(8, path.indexOf('.'));
 
-    self.runExec('convert ' + path + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
-
-    // fs.unlink(path);
-
-    // self.runExec('convert ' + 'pending/' + thumbName + ' -resize 10% ' + 'pending/preview/' + name + '.jpg');
-    // try {
-    //   // fs.unlink('pending/' + thumbName);
-    // }catch(err){
-    //   console.log(err);
-    // }
-
-    // var body = fs.createReadStream(path);
-    // var name = path.substring(8);
-
-    // var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: name}});
-    // s3obj.upload({Body: body})
-    // .on('httpUploadProgress', function(evt) { 
-    //   // console.log(evt); 
-    // }).
-    // send(function(err, data) {
-    //   if(!err){
-    //     fs.unlink(path);
-    //     self.notifyUploadImageCompleted(data.Location);  
-    //   }
-    // });
+    self.runExec('convert ' + path + ' -resize 10% ' + 'data/preview/' + name + '.jpg');
   });
 
 }
-
-
 
 mod.bootstrap = function (){
   // this.setupGPIO();

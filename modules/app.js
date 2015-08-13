@@ -312,7 +312,7 @@ mod.setupWatch = function(){
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var body = fs.createReadStream(path);
-    var name = path.substring(8, path.indexOf('.'));
+    var name = path.substring(16, path.indexOf('.'));
     var key = name + '.preview.jpg';
 
     var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});

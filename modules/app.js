@@ -303,7 +303,7 @@ mod.captureTethered = function(){
 mod.setupWatch = function(){
   var self = this;
 
-  var previewWatch = chokidar.watch('pending/preview/*.jpg', {
+  var previewWatch = chokidar.add('pending/preview/*.jpg', {
     ignored: /[\/\\]\./,
     persistent: true
   });
@@ -329,7 +329,7 @@ mod.setupWatch = function(){
     });
   });
 
-  var rawWatch = chokidar.watch('pending/*.nef', {
+  var rawWatch = chokidar.add(['pending/*.nef', 'pending/*.NEF'], {
     ignored: /[\/\\]\./,
     persistent: true
   });

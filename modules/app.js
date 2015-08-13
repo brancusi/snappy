@@ -312,9 +312,10 @@ mod.setupWatch = function(){
     console.log('File', path, 'has been added', 'Stats: ', stats); 
 
     var body = fs.createReadStream(path);
-    var name = path.substring(8);
+    var name = path.substring(8, path.indexOf('.'));
+    var key = name + '.preview.jpg';
 
-    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: name}});
+    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
     s3obj.upload({Body: body})
     .on('httpUploadProgress', function(evt) { 
       // console.log(evt); 
@@ -322,6 +323,7 @@ mod.setupWatch = function(){
     send(function(err, data) {
       if(!err){
         fs.unlink(path);
+        fs.unlink('pending/'+name+'.thumb.jpg');
         self.notifyUploadImageCompleted(data.Location);  
       }
     });

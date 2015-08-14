@@ -139,13 +139,9 @@ mod.updatePreviewImage = function(fileLocation){
   console.log('Requested update previewImage', fileLocation);
   var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
 
-  var data = {latestFileURL:fileLocation};
-
-  nodeRef.update(data, function(error){
+  nodeRef.update({latestFileURL:fileLocation}, function(error){
     if(error){
-      reject(error);
-    }else{
-      resolve();
+      console.log('There was an error adding that preview image', error);
     }
   });
 }

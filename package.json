@@ -1,6 +1,6 @@
 {
   "name": "snappy",
-  "version": "0.0.01",
+  "version": "0.0.02",
   "description": "Snappy App",
   "main": "server.js",
   "scripts": {
@@ -21,11 +21,9 @@
     "dotenv": "^1.2.0",
     "firebase": "^2.2.9",
     "moment": "^2.10.6",
-    "npm2": "^2.0.0",
     "pi-pins": "^1.0.2",
     "pm2": "^0.14.6",
     "promise": "^7.0.4",
-    "pubnub": "^3.7.13",
-    "rpi-gpio": "^0.6.0"
+    "pubnub": "^3.7.13"
   }
 }

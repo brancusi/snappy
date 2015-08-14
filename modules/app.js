@@ -48,15 +48,15 @@ mod.subscribe = function(){
     connect  : self.notify(connectMessage),
     callback : function(message, data, channel) {
       if(channel === 'global'){
-        self.processGlobalMessage(message);
+        self.processMessage(message);
       }else if(channel === process.env.RESIN_DEVICE_UUID){
-        self.processNodeMessage(message);
+        self.processMessage(message);
       }
     }
   });
 }
 
-mod.processGlobalMessage = function(message){
+mod.processMessage = function(message){
   // require('../global_commands/'+message.cmd)(message);
   console.log('global', message);
   switch('global', message.cmd){
@@ -68,24 +68,6 @@ mod.processGlobalMessage = function(message){
       break;
     case 'capture' :
       this.captureImage();
-      break;
-    case 'captureTethered' :
-      this.captureTethered();
-      break;
-  }
-}
-
-mod.processNodeMessage = function(message){
-  console.log('node', message.cmd);
-  switch(message.cmd){
-    case 'capture' :
-      this.captureImage();
-      break;
-    case 'tether' :
-      this.tether();
-      break;
-    case 'unTether' :
-      this.unTether();
       break;
     case 'captureTethered' :
       this.captureTethered();

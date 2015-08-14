@@ -294,7 +294,7 @@ mod.bootstrap = function (){
   // this.setupGPIO();
   this.setupCommandHandlers();
 
-  this.setupWatch();
+  // this.setupWatch();
   
   this.syncWithFB().then(function(response){
     console.log('Success yo!');

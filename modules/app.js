@@ -51,7 +51,7 @@ mod.setupThumbnailGenerator = function(){
   this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
   this.thumbnailGenerator.thumbnails
   .subscribe(function(path){
-    self.dataService.updatePreviewImage(path);
+    self.dataService.updatePreviewImage.call(dataService, path);
   });
 }
 

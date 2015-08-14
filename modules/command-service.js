@@ -7,17 +7,15 @@ var mod = CommandService.prototype;
 const ALLOWED_COMMANDS = ['tether', 'unTether', 'captureImage', 'captureTethered'];
 
 function CommandService(config){
-  if (!(this instanceof CommandService)) return new CommandService(config.pubKey, config.subKey, config.deviceUUID);
+  if (!(this instanceof CommandService)) return new CommandService(config);
   
-  this.delegate = config.delegate;
+  this.config = config
 
   this.pnClient = PubNub({
     ssl           : true,
-    publish_key   : pubKey,
-    subscribe_key : subKey
+    publish_key   : config.pubKey,
+    subscribe_key : config.subKey
   });
-
-  this.deviceUUID = deviceUUID;
 
   this.init();
 }
@@ -33,7 +31,7 @@ mod.notify = function(data){
 
 mod.init = function(){
   var self = this;
-  console.log('this.deviceUUID', this.deviceUUID);
+  console.log('config.deviceUUID', this.config.deviceUUID);
   this.pnClient.subscribe({
     channel  : self.generateChannels(),
     callback : self.processMessage.bind(self),
@@ -45,14 +43,14 @@ mod.init = function(){
 // Utility methods
 //===========================
 mod.generateChannels = function(){
-  return 'global,'+this.deviceUUID;
+  return 'global,'+this.config.deviceUUID;
 }
 
 mod.processMessage = function(message, data, channel){
   
-  console.log('Entered processing:', message.cmd, channel, this.deviceUUID, this[message.cmd], 'other');
+  console.log('Entered processing:', message.cmd, channel, this.config.deviceUUID, this[message.cmd], 'other');
 
-  if(channel !== 'global' && channel !== this.deviceUUID){
+  if(channel !== 'global' && channel !== this.config.deviceUUID){
     return;
   }
 
@@ -66,7 +64,7 @@ mod.processMessage = function(message, data, channel){
   console.log('Callback', this[message.cmd]);
 
   if(this[message.cmd] !== undefined){
-    this[message.cmd].call(this.delegate);
+    this[message.cmd].call(this.config.delegate);
   }else{
     console.log('You must set the '+message.cmd+' method on command service');
   }

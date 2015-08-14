@@ -139,7 +139,7 @@ mod.updatePreviewImage = function(fileLocation){
   console.log(typeof fileLocation);
   console.log('Requested update previewImage', fileLocation, this.config);
   var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
-  var data = {latestFileURL:fileLocation};
+  var data = {latestFileURL:String(fileLocation)};
   console.log('data', data);
   nodeRef.update(data);
 }

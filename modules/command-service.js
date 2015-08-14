@@ -16,6 +16,8 @@ function CommandService(pubKey, subKey, deviceUUID){
   });
 
   this.deviceUUID = deviceUUID;
+
+  this.init();
 }
 
 mod.notify = function(data){
@@ -27,12 +29,10 @@ mod.notify = function(data){
   });
 }
 
-mod.subscribe = function(){
-  var self = this;
-  
+mod.init = function(){
   this.pnClient.subscribe({
-    channel  : self.generateChannels(),
-    callback : self.processMessage,
+    channel  : this.generateChannels(),
+    callback : this.processMessage,
     error : function(e) { console.log( 'Error subscribing', e ); }
   });
 }

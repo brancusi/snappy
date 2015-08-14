@@ -1,15 +1,15 @@
-var util = require('util'),  
-    exec = require('child_process').exec,
-    spawn = require('child_process').spawn,
+var AWS = require('aws-sdk'),
+    chokidar = require('chokidar'),
     CommandService = require('./command-service'),
+    exec = require('child_process').exec,
     Firebase = require('firebase'),
+    fs = require('fs-extra'),
+    // GPIO = require('pi-pins');
     moment = require('moment'),
     Promise = require('promise'),
-    chokidar = require('chokidar'),
-    fs = require('fs'),
-    AWS = require('aws-sdk'),
+    spawn = require('child_process').spawn,
+    util = require('util'),  
     zlib = require('zlib');
-    // GPIO = require('pi-pins');
 
 module.exports = App;
 
@@ -78,13 +78,17 @@ mod.createNode = function(nodeRef){
 }
 
 mod.captureImage = function(){
-  this.runExec('gphoto2 --capture-image-and-download ' + this.fileNameFlag('new'));
+  this.runExec('gphoto2 --capture-image-and-download ' + this.fileNameFlag('preview'));
 }
 
 mod.fileNameFlag = function(type){
   switch(type){
     case 'new':
       return '--filename='+process.env.BASE_IMAGE_DIR+'new/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+    break;
+
+    case 'preview':
+      return '--filename='+process.env.BASE_IMAGE_DIR+'preview/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }
 }
@@ -157,6 +161,7 @@ mod.runExec = function(cmd){
   return new Promise(function(resolve, reject){
     var child = exec(cmd,
       function (error, stdout, stderr) {
+        console.log(stdout);
         resolve(stdout);
         if (error !== null) {
           reject(error);
@@ -233,30 +238,38 @@ mod.captureTethered = function(){
 
 mod.setupWatch = function(){
   var self = this;
+  var fileRegEx = /([^\/]+)(?=\.\w+$)/;
+  var options = {ignored: /[\/\\]\./, persistent: true};
+  var dir = process.env.BASE_IMAGE_DIR;
 
-  this.debugWatch = chokidar.watch([process.env.BASE_IMAGE_DIR + 'new/'], {
-    persistent: true
-  }).on('add', function(path, stats) { 
-    console.log('DEBUG: File', path, 'has been added', stats);
+  this.debugWatch = chokidar.watch([dir + 'preview/'], options)
+  .on('add', function(path) {
+    console.log('DEBUG: File', path);
   });
-  /*
-  // Watch for new raw files
-  this.rawWatch = chokidar.watch([process.env.BASE_IMAGE_DIR + 'new/*.nef', process.env.BASE_IMAGE_DIR + 'new/*.NEF'], {
-    ignored: /[\/\\]\./,
-    persistent: true
-  }).on('add', function(path, stats) { 
-    console.log('File', path, 'has been added', 'Stats: ', stats); 
-    self.runExec('dcraw -e ' + path);
+  
+  // Watch for preview raw files
+  this.rawWatch = chokidar.watch([dir + 'preview/*.nef', dir + 'preview/*.NEF'], options)
+  .on('add', function(path) { 
+    self.runExec('dcraw -v -e ' + path)
+    .then(function(response){
+      fs.remove(path);
+    });
   });
 
-  this.previewWatch = chokidar.watch(process.env.BASE_IMAGE_DIR + 'preview/*.jpg', {
-    ignored: /[\/\\]\./,
-    persistent: true
-  }).on('add', function(path, stats) { 
-    console.log('File', path, 'has been added', 'Stats: ', stats); 
+  this.thumbnailWatch = chokidar.watch(dir + 'preview/*thumb.jpg', options)
+  .on('add', function(path, stats) {
+    var name = fileRegEx.exec(path)[0];
+    self.runExec('convert ' + path + ' -resize 20% ' + dir + 'preview/upload/' + name + '.jpg')
+    .then(function(response){
+      fs.remove(path);
+    });
+  });
+
+  this.uploadwWatch = chokidar.watch(dir + 'preview/upload/*.jpg', options)
+  .on('add', function(path) { 
 
     var body = fs.createReadStream(path);
-    var name = path.substring(16, path.indexOf('.'));
+    var name = fileRegEx.exec(path)[0];
     var key = name + '.preview.jpg';
 
     var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
@@ -266,26 +279,12 @@ mod.setupWatch = function(){
     }).
     send(function(err, data) {
       if(!err){
-        fs.unlink(path);
-        fs.unlink('data/'+name+'.thumb.jpg');
+        fs.remove(path);
         self.notifyUploadImageCompleted(data.Location);  
       }
     });
   });
-
   
-
-  this.thumbnailWatch = chokidar.watch('data/*thumb.jpg', {
-    ignored: /[\/\\]\./,
-    persistent: true
-  }).on('add', function(path, stats) { 
-    console.log('File', path, 'has been added', 'Stats: ', stats); 
-
-    var name = path.substring(8, path.indexOf('.'));
-
-    self.runExec('convert ' + path + ' -resize 10% ' + 'data/preview/' + name + '.jpg');
-  });
-  */
 }
 
 mod.bootstrap = function (){

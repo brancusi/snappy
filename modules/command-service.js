@@ -48,20 +48,13 @@ mod.generateChannels = function(){
 
 mod.processMessage = function(message, data, channel){
   
-  console.log('Entered processing:', message.cmd, channel, this.config.deviceUUID, this[message.cmd], 'other');
-
   if(channel !== 'global' && channel !== this.config.deviceUUID){
     return;
   }
 
-  console.log('Is for this node');
-
   if(!this.isAllowedCommand){
-    console.log('This is not an allowed command');
     return;
   }
-  
-  console.log('Callback', this[message.cmd]);
 
   if(this.config.delegate[message.cmd] !== undefined){
     this.config.delegate[message.cmd].call(this.config.delegate);

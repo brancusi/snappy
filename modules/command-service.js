@@ -30,9 +30,10 @@ mod.notify = function(data){
 }
 
 mod.init = function(){
+  var self = this;
   this.pnClient.subscribe({
-    channel  : this.generateChannels(),
-    callback : this.processMessage,
+    channel  : self.generateChannels(),
+    callback : self.processMessage,
     error : function(e) { console.log( 'Error subscribing', e ); }
   });
 }
@@ -46,7 +47,7 @@ mod.generateChannels = function(){
 
 mod.processMessage = function(message, data, channel){
   
-  console.log('Entered processing', message, channel, this.deviceUUID);
+  console.log('Entered processing', message, channel, this.deviceUUID, this[message.cmd]);
 
   if(channel !== 'global' && channel !== this.deviceUUID){
     return;

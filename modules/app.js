@@ -38,6 +38,7 @@ mod.setupEventHandlers = function(){
 }
 
 mod.updateCameraSettings = function(e){
+  console.log('Will try to update settings now');
   this.unTether().then(function(){
     
     var data = e.value();

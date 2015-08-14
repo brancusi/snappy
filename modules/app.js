@@ -27,9 +27,7 @@ function App(fbUrl, pubKey, subKey){
 
   this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
 
-  this.buildDirStructure();
-
-  this.setupWatch();
+  fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
 }
 
 mod.captureImage = function(){
@@ -117,8 +115,4 @@ mod.captureTethered = function(){
   setTimeout(function() {
     self.shutterPin.mode('low');
   }, 20);
-}
-
-mod.buildDirStructure = function(){
-  fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
 }

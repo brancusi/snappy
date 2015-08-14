@@ -234,14 +234,14 @@ mod.captureTethered = function(){
 mod.setupWatch = function(){
   var self = this;
 
-  this.debugWatch = chokidar.watch(['/data/new/'], {
+  this.debugWatch = chokidar.watch([process.env.BASE_IMAGE_DIR + 'new/'], {
     persistent: true
   }).on('add', function(path, stats) { 
     console.log('DEBUG: File', path, 'has been added');
   });
-
+  /*
   // Watch for new raw files
-  this.rawWatch = chokidar.watch(['/data/new/*.nef', '/data/new/*.NEF'], {
+  this.rawWatch = chokidar.watch([process.env.BASE_IMAGE_DIR + 'new/*.nef', process.env.BASE_IMAGE_DIR + 'new/*.NEF'], {
     ignored: /[\/\\]\./,
     persistent: true
   }).on('add', function(path, stats) { 
@@ -249,7 +249,7 @@ mod.setupWatch = function(){
     self.runExec('dcraw -e ' + path);
   });
 
-  this.previewWatch = chokidar.watch('data/preview/*.jpg', {
+  this.previewWatch = chokidar.watch(process.env.BASE_IMAGE_DIR + 'preview/*.jpg', {
     ignored: /[\/\\]\./,
     persistent: true
   }).on('add', function(path, stats) { 
@@ -285,7 +285,7 @@ mod.setupWatch = function(){
 
     self.runExec('convert ' + path + ' -resize 10% ' + 'data/preview/' + name + '.jpg');
   });
-
+  */
 }
 
 mod.bootstrap = function (){

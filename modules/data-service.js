@@ -1,4 +1,5 @@
-var Firebase = require('firebase'),
+var Bacon   = require('baconjs').Bacon,
+    Firebase = require('firebase'),
     runExec = require('../utils/exec').runExec,
     Promise = require('promise');
 
@@ -8,52 +9,66 @@ var mod = DataService.prototype;
 
 function DataService(config){
   if (!(this instanceof DataService)) return new DataService(config);
-  
-  this.config = config
+  this.config = config;
 
   this.fbClient = new Firebase(config.fbUrl);
+  this.settings = new Bacon.Bus();
 
-  this.init();
+  this.setup();
 }
 
-mod.init = function(){
-  this.syncWithFB().then(function(response){
-    console.log('Synced with fb setting');
+mod.setup = function(){
+  var self = this;
+
+  this.loadNodeData()
+  .then(function(data){
+    self.setupListeners(data);
   }).catch(function(error){
-    console.log(error);
+    console.log('There was as error', error);
+  })
+}
+
+mod.setupListeners = function(nodeData){
+  this.linkWithSettings(nodeData.val().setting);
+}
+
+mod.linkWithSettings = function(settingID){
+  var self = this;
+
+  var nodeRef = self.fbClient.child('settings/' + settingID);
+
+  var setting = nodeRef.on('value', function(snapshot){
+    self.settings.push(snapshot.val());
+    console.log(snapshot.val());
   });
 }
 
-mod.syncWithFB = function(){
+mod.loadNodeData = function(){
   var self = this;
+
   return new Promise(function(resolve, reject){
-    self.createOrUpdateNode().then(function(){
-      var swarmRef = self.fbClient.child('swarms/' + this.config.swarmID + '/nodes');
-      swarmRef.once('value', function(snapshot){
-        var data = {};
-        data[this.config.deviceUUID] = true;
-        swarmRef.update(data, function(error){
-          if(error){
-            reject(error);
-          }else{
-            resolve(data);
-          }
-        });
-      });
+    self.createOrLoadNode().then(function(data){
+      resolve(data);
+    }).catch(function(error){
+      reject(error);
     });
+
   });
 }
 
-mod.createOrUpdateNode = function(){
+mod.createOrLoadNode = function(){
   var self = this;
   return new Promise(function(resolve, reject){
 
-    var nodeRef = self.fbClient.child('nodes/' + this.config.deviceUUID);
+    var nodeRef = self.fbClient.child('nodes/' + self.config.deviceUUID);
+
     nodeRef.once('value', function(snapshot){
       if(!snapshot.exists()){
+        console.log('Gonna make one');
         resolve(self.createNode(nodeRef));
       }else{
-        resolve(self.syncSettings(nodeRef));
+        console.log('Got one already');
+        resolve(snapshot);
       }
     });
 
@@ -63,14 +78,59 @@ mod.createOrUpdateNode = function(){
 mod.createNode = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
-    var data = {name:this.config.deviceUUID, swarm:this.config.swarmID};
+    var data = {name:self.config.nodeName,
+                swarm:self.config.swarmID, 
+                setting:self.createSetting(self.config.deviceUUID)};
 
     nodeRef.update(data, function(error){
       if(error){
         reject(error);
       }else{
-        resolve(self.syncSettings(nodeRef));
+        self.registerWithSwarm(self.config.deviceUUID)
+        .then(function(){
+          resolve(data);
+        });
       }
+    });
+
+  });
+}
+
+mod.createSetting = function(deviceUUID){
+    
+  var nodeRef = this.fbClient.child('settings/');
+
+  var data = {iso:1, aperture:5, shutterspeed:20, node:deviceUUID};
+
+  var record = nodeRef.push(data, function(error){
+    if(error){
+      console.log('Error creating setting: ', error);
+    }
+  });
+
+  return record.key();
+}
+
+mod.registerWithSwarm = function(present){
+  var self = this;
+
+  if(present === undefined){
+    present = true;
+  }
+
+  return new Promise(function(resolve, reject){
+    var swarmRef = self.fbClient.child('swarms/' + self.config.swarmID + '/nodes');
+    swarmRef.once('value', function(snapshot){
+      var data = {};
+      data[self.config.deviceUUID] = present;
+
+      swarmRef.update(data, function(error){
+        if(error){
+          reject(error);
+        }else{
+          resolve(data);
+        }
+      });
     });
   });
 }
@@ -80,40 +140,30 @@ mod.syncSettings = function(nodeRef){
   var self = this;
   return new Promise(function(resolve, reject){
     nodeRef.on('value', function(snapshot){
-
-      self.unTether().then(function(){
-        var data = snapshot.val();
-        var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso + ' --set-config-index shutterspeed=' + data.shutterspeed + ' --set-config-index aperture' + data.aperture
-        resolve(runExec(cmdStr));
-      }).catch(function(error){
-        console.log('Couldnt untether');
-        reject(error);
-      }) 
+      // self.unTether().then(function(){
+      //   var data = snapshot.val();
+      //   var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso + ' --set-config-index shutterspeed=' + data.shutterspeed + ' --set-config-index aperture' + data.aperture
+      //   resolve(runExec(cmdStr));
+      // }).catch(function(error){
+      //   console.log('Couldnt untether');
+      //   reject(error);
+      // }) 
     });
   })
   
 }
 
-mod.createRecord = function(type, data){
-  console.log('WooHoo!', data);
-}
-
-mod.notifyUploadImageCompleted = function(fileLocation){
-
+mod.updatePreviewImage = function(fileLocation){
   var re = /^.*\.(jpg|JPG)$/; 
-
   if(re.test(fileLocation)){
-    console.log('Updating FB with jpg', fileLocation);
     var self = this;
     return new Promise(function(resolve, reject){
-
       var nodeRef = self.fbClient.child('nodes/' + this.config.deviceUUID);
       var data = {latestFileURL:fileLocation};
       nodeRef.update(data, function(error){
         if(error){
           reject(error);
         }else{
-          console.log('All good on the file path');
           resolve();
         }
       });

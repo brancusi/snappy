@@ -23,22 +23,35 @@ function App(fbUrl, pubKey, subKey){
 
   this.dataService = new DataService({fbUrl:fbUrl,
                                       deviceUUID:process.env.RESIN_DEVICE_UUID,
-                                      swarmID:process.env.SWARM_ID});
+                                      swarmID:process.env.SWARM_ID,
+                                      nodeName:process.env.NODE_NAME});
 
   this.setupThumbnailGenerator();
 
   fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
+
+  this.setupEventHandlers();
+}
+
+mod.setupEventHandlers = function(){
+  this.dataService.settings.subscribe(this.updateCameraSettings.bind(this));
+}
+
+mod.updateCameraSettings = function(settingsData){
+  this.unTether().then(function(){
+    var cmdStr = 'gphoto2 --set-config-index iso=' + settingsData.iso + ' --set-config-index shutterspeed=' + settingsData.shutterspeed + ' --set-config-index aperture' + settingsData.aperture;
+    runExec(cmdStr);
+  }).catch(function(error){
+    console.log('Couldnt untether');
+  });
 }
 
 mod.setupThumbnailGenerator = function(){
   var self = this;
-  
   this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
-
   this.thumbnailGenerator.thumbnails
   .subscribe(function(path){
-    console.log('Mapping path', path);
-    self.dataService.createRecord('thumbnail', {url:path});
+    self.dataService.updatePreviewImage(path);
   });
 }
 

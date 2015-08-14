@@ -4,13 +4,6 @@ var exec = require('child_process').exec,
 
 module.exports = {
   runExec: function(cmd){
-    return new Promise(function(resolve, reject){
-      var child = exec(cmd,
-        function (error, stdout, stderr) {
-          resolve(stdout);
-          if (error !== null) {
-            reject(error);
-          }
-      });
+    console.log('WHAT!!!');
   }
 }

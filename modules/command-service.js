@@ -48,7 +48,7 @@ mod.processMessage = function(message, data, channel){
   
   console.log('Entered processing', message, channel);
 
-  if(channel !== 'global' && channel !== self.deviceUUID){
+  if(channel !== 'global' && channel !== this.deviceUUID){
     return;
   }
 

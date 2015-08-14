@@ -37,10 +37,17 @@ mod.setupEventHandlers = function(){
   this.dataService.settings.subscribe(this.updateCameraSettings.bind(this));
 }
 
-mod.updateCameraSettings = function(settingsData){
+mod.updateCameraSettings = function(e){
   this.unTether().then(function(){
-    var cmdStr = 'gphoto2 --set-config-index iso=' + settingsData.iso + ' --set-config-index shutterspeed=' + settingsData.shutterspeed + ' --set-config-index aperture' + settingsData.aperture;
+    
+    var data = e.value();
+    
+    var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso 
+               + ' --set-config-index shutterspeed=' + data.shutterspeed 
+               + ' --set-config-index aperture' + data.aperture;
+    
     runExec(cmdStr);
+
   }).catch(function(error){
     console.log('Couldnt untether');
   });

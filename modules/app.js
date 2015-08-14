@@ -25,13 +25,21 @@ function App(fbUrl, pubKey, subKey){
                                       deviceUUID:process.env.RESIN_DEVICE_UUID,
                                       swarmID:process.env.SWARM_ID});
 
-  this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
-
-  this.thumbnailGenerator.thumbnails.map(function(path){
-    this.dataService.createRecord('thumbnail', {url:path});
-  });
+  this.setupThumbnailGenerator();
 
   fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
+}
+
+mod.setupThumbnailGenerator = function(){
+  var self = this;
+  
+  this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
+
+  this.thumbnailGenerator.thumbnails
+  .subscribe(function(path){
+    console.log('Mapping path', path);
+    self.dataService.createRecord('thumbnail', {url:path});
+  });
 }
 
 mod.captureImage = function(){

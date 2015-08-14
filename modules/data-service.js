@@ -135,7 +135,7 @@ mod.registerWithSwarm = function(present){
   });
 }
 
-mod.updatePreviewImage = function(fileLocation){
+mod.updatePreviewImage = function(e){
   var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
-  nodeRef.update({latestFileURL:String(fileLocation)});
+  nodeRef.update({latestFileURL:e.value()});
 }

@@ -60,7 +60,8 @@ mod.setupWatch = function(){
     send(function(err, data) {
       if(!err){
         fs.remove(path);
-        console.log('aws data', data);
+        console.log(typeof data);
+        console.log(typeof data.Location);
         self.thumbnails.push(data.Location);
       }
     });

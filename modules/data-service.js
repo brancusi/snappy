@@ -135,40 +135,17 @@ mod.registerWithSwarm = function(present){
   });
 }
 
-mod.syncSettings = function(nodeRef){
-  
-  var self = this;
-  return new Promise(function(resolve, reject){
-    nodeRef.on('value', function(snapshot){
-      // self.unTether().then(function(){
-      //   var data = snapshot.val();
-      //   var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso + ' --set-config-index shutterspeed=' + data.shutterspeed + ' --set-config-index aperture' + data.aperture
-      //   resolve(runExec(cmdStr));
-      // }).catch(function(error){
-      //   console.log('Couldnt untether');
-      //   reject(error);
-      // }) 
-    });
-  })
-  
-}
-
 mod.updatePreviewImage = function(fileLocation){
-  var re = /^.*\.(jpg|JPG)$/; 
-  if(re.test(fileLocation)){
-    var self = this;
-    return new Promise(function(resolve, reject){
-      var nodeRef = self.fbClient.child('nodes/' + this.config.deviceUUID);
-      var data = {latestFileURL:fileLocation};
-      nodeRef.update(data, function(error){
-        if(error){
-          reject(error);
-        }else{
-          resolve();
-        }
-      });
+  console.log('Requested update previewImage', fileLocation);
+  var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
 
-    });
+  var data = {latestFileURL:fileLocation};
 
-  }
+  nodeRef.update(data, function(error){
+    if(error){
+      reject(error);
+    }else{
+      resolve();
+    }
+  });
 }

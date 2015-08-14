@@ -49,10 +49,7 @@ mod.updateCameraSettings = function(settingsData){
 mod.setupThumbnailGenerator = function(){
   var self = this;
   this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
-  this.thumbnailGenerator.thumbnails
-  .subscribe(function(path){
-    self.dataService.updatePreviewImage.call(self.dataService, path);
-  });
+  this.thumbnailGenerator.thumbnails.subscribe(self.dataService.updatePreviewImage.bind(self.dataService));
 }
 
 mod.captureImage = function(){

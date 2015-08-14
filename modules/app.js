@@ -18,7 +18,11 @@ var mod = App.prototype;
 function App(fbUrl, pubKey, subKey){
   if (!(this instanceof App)) return new App(fbUrl, pubKey, subKey);
 
-  this.cs = new CommandService(pubKey, subKey, process.env.RESIN_DEVICE_UUID);
+  this.cs = new CommandService({pubKey:pubKey, 
+                                subKey:subKey, 
+                                deviceUUID:process.env.RESIN_DEVICE_UUID, 
+                                delegate:this});
+  
   this.fbClient = new Firebase(fbUrl);
 }
 
@@ -227,13 +231,6 @@ mod.captureTethered = function(){
   }, 50);
 }
 
-mod.setupCommandHandlers = function(){
-  this.cs.tether = this.tether;
-  this.cs.unTether = this.unTether;
-  this.cs.captureImage = this.captureImage;
-  this.cs.captureTethered = this.captureTethered;
-}
-
 mod.setupWatch = function(){
   var self = this;
 
@@ -296,7 +293,6 @@ mod.bootstrap = function (){
 
   this.setupWatch();
   // this.setupGPIO();
-  this.setupCommandHandlers();
   
   this.syncWithFB().then(function(response){
     console.log('Success yo!');

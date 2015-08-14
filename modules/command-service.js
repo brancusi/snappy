@@ -6,9 +6,11 @@ var mod = CommandService.prototype;
 
 const ALLOWED_COMMANDS = ['tether', 'unTether', 'captureImage', 'captureTethered'];
 
-function CommandService(pubKey, subKey, deviceUUID){
-  if (!(this instanceof CommandService)) return new CommandService(pubKey, subKey, deviceUUID);
+function CommandService(config){
+  if (!(this instanceof CommandService)) return new CommandService(config.pubKey, config.subKey, config.deviceUUID);
   
+  this.delegate = config.delegate;
+
   this.pnClient = PubNub({
     ssl           : true,
     publish_key   : pubKey,
@@ -64,7 +66,7 @@ mod.processMessage = function(message, data, channel){
   console.log('Callback', this[message.cmd]);
 
   if(this[message.cmd] !== undefined){
-    this[message.cmd]();
+    this[message.cmd].call(this.delegate);
   }else{
     console.log('You must set the '+message.cmd+' method on command service');
   }

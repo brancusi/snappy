@@ -6,7 +6,7 @@ var mod = CommandService.prototype;
 
 const ALLOWED_COMMANDS = ['tether', 'unTether', 'captureImage', 'captureTethered'];
 
-function CommandService(pubKey, subKey){
+function CommandService(pubKey, subKey, deviceUUID){
   if (!(this instanceof CommandService)) return new CommandService(pubKey, subKey, deviceUUID);
   
   this.pnClient = PubNub({

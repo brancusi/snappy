@@ -1,6 +1,7 @@
 var AWS = require('aws-sdk'),
     chokidar = require('chokidar'),
     fs = require('fs-extra'),
+    Bacon   = require('baconjs').Bacon,
     runExec = require('../utils/exec').runExec;
 
 module.exports = ThumbnailGenerator;
@@ -10,9 +11,10 @@ var mod = ThumbnailGenerator.prototype;
 function ThumbnailGenerator(baseDir){
   if (!(this instanceof ThumbnailGenerator)) return new ThumbnailGenerator(baseDir);
   this.baseDir = baseDir;
-  
+
   this.buildDirectories();
   this.setupWatch();
+  this.thumbnails = new Bacon.Bus();
 }
 
 mod.buildDirectories = function(){
@@ -58,7 +60,7 @@ mod.setupWatch = function(){
     send(function(err, data) {
       if(!err){
         fs.remove(path);
-        self.notifyUploadImageCompleted(data.Location);  
+        this.thumbnails.push(data.Location);
       }
     });
   });

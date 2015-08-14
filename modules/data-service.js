@@ -94,6 +94,10 @@ mod.syncSettings = function(nodeRef){
   
 }
 
+mod.createRecord = function(type, data){
+  console.log('WooHoo!', data);
+}
+
 mod.notifyUploadImageCompleted = function(fileLocation){
 
   var re = /^.*\.(jpg|JPG)$/; 

@@ -27,6 +27,10 @@ function App(fbUrl, pubKey, subKey){
 
   this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
 
+  thumbnailGenerator.thumbnails.map(function(path){
+    this.dataService.createRecord('thumbnail', {url:path});
+  });
+
   fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
 }
 

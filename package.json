@@ -17,6 +17,7 @@
   "devDependencies": {},
   "dependencies": {
     "aws-sdk": "^2.1.44",
+    "baconjs": "^0.7.71",
     "chokidar": "^1.0.5",
     "dotenv": "^1.2.0",
     "firebase": "^2.2.9",

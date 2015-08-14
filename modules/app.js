@@ -19,6 +19,7 @@ function App(fbUrl, pubKey, subKey){
   if (!(this instanceof App)) return new App(fbUrl, pubKey, subKey);
 
   this.cs = CommandService(pubKey, subKey, process.env.RESIN_DEVICE_UUID);
+  this.fbClient = Firebase(fbUrl);
 }
 
 mod.syncWithFB = function(){
@@ -292,10 +293,10 @@ mod.setupWatch = function(){
 
 mod.bootstrap = function (){
   console.log('Starting up client');
+
+  this.setupWatch();
   // this.setupGPIO();
   this.setupCommandHandlers();
-
-  // this.setupWatch();
   
   this.syncWithFB().then(function(response){
     console.log('Success yo!');

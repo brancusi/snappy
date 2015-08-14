@@ -56,7 +56,9 @@ mod.processMessage = function(message, data, channel){
     console.log('This is not an allowed command');
     return;
   }
-    
+  
+  console.log(this[message.cmd]);
+
   if(this[message.cmd] !== undefined){
     this[message.cmd]();
   }else{

@@ -137,5 +137,5 @@ mod.registerWithSwarm = function(present){
 
 mod.updatePreviewImage = function(fileLocation){
   var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
-  nodeRef.update({latestFileURL:fileLocation});
+  nodeRef.update({latestFileURL:String(fileLocation)});
 }

@@ -60,7 +60,7 @@ mod.setupWatch = function(){
     send(function(err, data) {
       if(!err){
         fs.remove(path);
-        self.thumbnails.push(String(data.Location));
+        self.thumbnails.push(data.Location);
       }
     });
   });

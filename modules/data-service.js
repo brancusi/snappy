@@ -136,11 +136,12 @@ mod.registerWithSwarm = function(present){
 }
 
 mod.updatePreviewImage = function(fileLocation){
-  var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
-  nodeRef.update({latestFileURL:fileLocation}, function(error){
-    if(error){
-      console.log('There was an error adding that preview image', error);
-    }
-  });
+  console.log('Requested update previewImage', fileLocation, this.config);
+  // var nodeRef = this.fbClient.child('nodes/' + this.config.deviceUUID);
+  // nodeRef.update({latestFileURL:fileLocation}, function(error){
+  //   if(error){
+  //     console.log('There was an error adding that preview image', error);
+  //   }
+  // });
   
 }

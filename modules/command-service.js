@@ -63,8 +63,8 @@ mod.processMessage = function(message, data, channel){
   
   console.log('Callback', this[message.cmd]);
 
-  if(this[message.cmd] !== undefined){
-    this[message.cmd].call(this.config.delegate);
+  if(this.config.delegate[message.cmd] !== undefined){
+    this.config.delegate[message.cmd].call(this.config.delegate);
   }else{
     console.log('You must set the '+message.cmd+' method on command service');
   }

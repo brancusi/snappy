@@ -20,7 +20,7 @@ function App(fbUrl, pubKey, subKey){
                                             deviceUUID:process.env.RESIN_DEVICE_UUID, 
                                             delegate:this});
 
-  this.dataService = new DataService({fbUrl:fbUrl
+  this.dataService = new DataService({fbUrl:fbUrl,
                                       deviceUUID:process.env.RESIN_DEVICE_UUID,
                                       swarmID:process.env.SWARM_ID});
 

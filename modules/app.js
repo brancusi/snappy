@@ -237,7 +237,7 @@ mod.setupWatch = function(){
   this.debugWatch = chokidar.watch([process.env.BASE_IMAGE_DIR + 'new/'], {
     persistent: true
   }).on('add', function(path, stats) { 
-    console.log('DEBUG: File', path, 'has been added');
+    console.log('DEBUG: File', path, 'has been added', stats);
   });
   /*
   // Watch for new raw files

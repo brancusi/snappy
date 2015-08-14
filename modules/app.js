@@ -292,9 +292,10 @@ mod.setupWatch = function(){
 
 mod.bootstrap = function (){
   // this.setupGPIO();
-  this.setupCommandHandlers();
   this.setupWatch();
-  this.subscribe();
+  
+  this.setupCommandHandlers();
+  
   this.syncWithFB().then(function(response){
     console.log('Success yo!');
   }).catch(function(error){

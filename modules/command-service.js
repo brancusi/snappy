@@ -47,7 +47,7 @@ mod.generateChannels = function(){
 
 mod.processMessage = function(message, data, channel){
   
-  console.log('Entered processing', message, channel, this.deviceUUID, this[message.cmd]);
+  console.log('Entered processing:', message.cmd, channel, this.deviceUUID, this[message.cmd], 'other');
 
   if(channel !== 'global' && channel !== this.deviceUUID){
     return;

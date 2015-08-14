@@ -236,6 +236,12 @@ mod.captureTethered = function(){
   }, 50);
 }
 
+mod.buildDirStructure = function(){
+  fs.mkdirs(process.env.BASE_IMAGE_DIR);
+  fs.mkdirs(process.env.BASE_IMAGE_DIR + 'preview/upload');
+  fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
+}
+
 mod.setupWatch = function(){
   var self = this;
   var fileRegEx = /([^\/]+)(?=\.\w+$)/;
@@ -289,7 +295,7 @@ mod.setupWatch = function(){
 
 mod.bootstrap = function (){
   console.log('Starting up client');
-
+  this.buildDirStructure();
   this.setupWatch();
   // this.setupGPIO();
   

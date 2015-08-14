@@ -291,6 +291,7 @@ mod.setupWatch = function(){
 }
 
 mod.bootstrap = function (){
+  console.log('Starting up client');
   // this.setupGPIO();
   this.setupCommandHandlers();
 

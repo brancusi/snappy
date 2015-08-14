@@ -4,6 +4,14 @@ var exec = require('child_process').exec,
 
 module.exports = {
   runExec: function(cmd){
-    console.log('WHAT!!!');
+    return new Promise(function(resolve, reject){
+      exec(cmd, function(error, stdout, stderr){
+        resolve(stdout);
+
+        if (error !== null) {
+          reject(error);
+        }
+      });
+    });
   }
 }

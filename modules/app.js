@@ -1,5 +1,6 @@
 var CommandService = require('./command-service'),
     DataService = require('./data-service'),
+    fs = require('fs-extra'),
     runExec = require('../utils/exec').runExec,
     
     // GPIO = require('pi-pins');

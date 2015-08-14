@@ -18,7 +18,7 @@ var mod = App.prototype;
 function App(fbUrl, pubKey, subKey){
   if (!(this instanceof App)) return new App(fbUrl, pubKey, subKey);
 
-  this.cs = CommandService(pubKey, subKey, process.env.RESIN_DEVICE_UUID);
+  this.cs = new CommandService(pubKey, subKey, process.env.RESIN_DEVICE_UUID);
   this.fbClient = new Firebase(fbUrl);
 }
 

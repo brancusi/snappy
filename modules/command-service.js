@@ -31,9 +31,10 @@ mod.notify = function(data){
 
 mod.init = function(){
   var self = this;
+  console.log('this.deviceUUID', this.deviceUUID);
   this.pnClient.subscribe({
     channel  : self.generateChannels(),
-    callback : self.processMessage,
+    callback : self.processMessage.bind(self),
     error : function(e) { console.log( 'Error subscribing', e ); }
   });
 }

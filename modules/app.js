@@ -1,7 +1,7 @@
 var util = require('util'),  
     exec = require('child_process').exec,
     spawn = require('child_process').spawn,
-    PubNub = require('pubnub'),
+    CommandService = require('./command-service'),
     Firebase = require('firebase'),
     moment = require('moment'),
     Promise = require('promise'),
@@ -18,61 +18,7 @@ var mod = App.prototype;
 function App(fbUrl, pubKey, subKey){
   if (!(this instanceof App)) return new App(fbUrl, pubKey, subKey);
 
-  this.fbClient = new Firebase(fbUrl);
-  this.pnClient = PubNub({
-    ssl           : true,
-    publish_key   : pubKey,
-    subscribe_key : subKey
-  });
-}
-
-mod.notify = function(data){
-  this.pnClient.publish({ 
-    channel   : data.channel,
-    message   : data.message,
-    callback  : function(e) { console.log( 'SUCCESS!', e ); },
-    error     : function(e) { console.log( 'FAILED! RETRY PUBLISH!', e ); }
-  });
-}
-
-mod.subscribe = function(){
-  var self = this;
-  var connectMessage = { channel:'node_feedback', 
-                  message:{node:process.env.RESIN_DEVICE_UUID, 
-                  message:'online', 
-                  status:'online'}};
-
-  var channels = 'global,'+process.env.RESIN_DEVICE_UUID;
-  this.pnClient.subscribe({
-    channel  : channels,
-    connect  : self.notify(connectMessage),
-    callback : function(message, data, channel) {
-      if(channel === 'global'){
-        self.processMessage(message);
-      }else if(channel === process.env.RESIN_DEVICE_UUID){
-        self.processMessage(message);
-      }
-    }
-  });
-}
-
-mod.processMessage = function(message){
-  // require('../global_commands/'+message.cmd)(message);
-  console.log('global', message);
-  switch('global', message.cmd){
-    case 'tether' :
-      this.tether();
-      break;
-    case 'unTether' :
-      this.unTether();
-      break;
-    case 'capture' :
-      this.captureImage();
-      break;
-    case 'captureTethered' :
-      this.captureTethered();
-      break;
-  }
+  this.cs = CommandService(pubKey, subKey);
 }
 
 mod.syncWithFB = function(){
@@ -280,6 +226,13 @@ mod.captureTethered = function(){
   }, 50);
 }
 
+mod.setupCommandHandlers = function(){
+  this.cs.tether = this.tether;
+  this.cs.unTether = this.unTether;
+  this.cs.captureImage = this.captureImage;
+  this.cs.captureTethered = this.captureTethered;
+}
+
 mod.setupWatch = function(){
   var self = this;
 
@@ -339,6 +292,7 @@ mod.setupWatch = function(){
 
 mod.bootstrap = function (){
   // this.setupGPIO();
+  this.setupCommandHandlers();
   this.setupWatch();
   this.subscribe();
   this.syncWithFB().then(function(response){

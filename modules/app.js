@@ -45,7 +45,7 @@ mod.updateCameraSettings = function(e){
     
     var cmdStr = 'gphoto2 --set-config-index iso=' + data.iso 
                + ' --set-config-index shutterspeed=' + data.shutterspeed 
-               + ' --set-config-index f-number' + data.aperture;
+               + ' --set-config-index f-number=' + data.aperture;
     
     runExec(cmdStr);
 

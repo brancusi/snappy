@@ -1,4 +1,4 @@
-PubNub = require('pubnub');
+var PubNub = require('pubnub');
 
 module.exports = CommandService;
 

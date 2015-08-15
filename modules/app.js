@@ -9,7 +9,8 @@ var CommandService = require('./command-service'),
     spawn = require('child_process').spawn,
     ThumbnailGenerator = require('./thumbnail-generator');
 
-const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/';
+const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/preview/';
+const SWRAM_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/swarm/';
 
 module.exports = App;
 
@@ -30,7 +31,7 @@ function App(fbUrl, pubKey, subKey){
 
   this.setupThumbnailGenerator();
 
-  fs.mkdirs(TMP_IMAGE_DIR + 'swarm');
+  fs.mkdirs(SWRAM_IMAGE_DIR);
 
   this.setupGPIO();
 
@@ -70,11 +71,11 @@ mod.captureImage = function(){
 mod.fileNameFlag = function(type){
   switch(type){
     case 'new':
-      return '--filename='+TMP_IMAGE_DIR+'swarm/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+SWRAM_IMAGE_DIR+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
 
     case 'preview':
-      return '--filename='+TMP_IMAGE_DIR+'preview/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+TMP_IMAGE_DIR+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }
 }

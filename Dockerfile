@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # We need to install pm2 globally so it can be found. Squash the nasty output.
-RUN npm install pm2 -g --unsafe-perm --loglevel verbose
+# RUN npm install pm2 -g --unsafe-perm --loglevel verbose
 
 # Run npm install here to cache this later for future builds
 COPY package.json $APP_BASE/

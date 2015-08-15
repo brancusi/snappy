@@ -25,10 +25,9 @@ mod.setupWatch = function(){
   var self = this;
   var fileRegEx = /([^\/]+)(?=\.\w+$)/;
   var options = {ignored: /[\/\\]\./, persistent: true};
-  var dir = ;
   
   // Watch for preview raw files
-  this.rawWatch = chokidar.watch([dir + 'preview/*.nef', dir + 'preview/*.NEF'], options)
+  this.rawWatch = chokidar.watch([this.baseDir + 'preview/*.nef', this.baseDir + 'preview/*.NEF'], options)
   .on('add', function(path) { 
     runExec('dcraw -v -e ' + path)
     .then(function(response){
@@ -36,16 +35,16 @@ mod.setupWatch = function(){
     });
   });
 
-  this.thumbnailWatch = chokidar.watch(dir + 'preview/*thumb.jpg', options)
+  this.thumbnailWatch = chokidar.watch(this.baseDir + 'preview/*thumb.jpg', options)
   .on('add', function(path, stats) {
     var name = fileRegEx.exec(path)[0];
-    runExec('convert ' + path + ' -resize 20% ' + dir + 'preview/upload/' + name + '.jpg')
+    runExec('convert ' + path + ' -resize 20% ' + this.baseDir + 'preview/upload/' + name + '.jpg')
     .then(function(response){
       fs.remove(path);
     });
   });
 
-  this.uploadwWatch = chokidar.watch(dir + 'preview/upload/*.jpg', options)
+  this.uploadwWatch = chokidar.watch(this.baseDir + 'preview/upload/*.jpg', options)
   .on('add', function(path) { 
 
     var body = fs.createReadStream(path);

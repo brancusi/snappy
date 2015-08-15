@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
   gphoto2
 
 # Run npm install here to cache this later for future builds
-COPY package.json $APP
+COPY package.json $APP/
 
 # Squash the nasty output
 RUN DEBIAN_FRONTEND=noninteractive JOBS=MAX npm install --unsafe-perm

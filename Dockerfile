@@ -21,13 +21,11 @@ COPY package.json $APP_BASE/
 # Run npm install and squash the nasty output.
 RUN DEBIAN_FRONTEND=noninteractive JOBS=MAX npm install --unsafe-perm
 
-VOLUME /data
+# Use Systemd in container: https://resin.io/blog/brand-new-base-images/
+ENV INITSYSTEM on
 
 # Copy over app source
 COPY . $APP_BASE
-
-# Use Systemd in container: https://resin.io/blog/brand-new-base-images/
-ENV INITSYSTEM on
 
 # Start up the app
 CMD [ "node", "$APP_BASE/server.js" ]

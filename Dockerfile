@@ -18,7 +18,7 @@ COPY package.json $APP/
 RUN DEBIAN_FRONTEND=noninteractive JOBS=MAX npm install --unsafe-perm
 
 # We need to install pm2 globally so it can be found. Squash the nasty output.
-RUN DEBIAN_FRONTEND=noninteractive JOBS=MAX npm install pm2 -g --unsafe-perm --loglevel verbose
+RUN npm install pm2 -g --unsafe-perm --loglevel verbose
 
 # Copy over app source
 COPY . $APP

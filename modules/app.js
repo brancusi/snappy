@@ -3,7 +3,7 @@ var CommandService = require('./command-service'),
     fs = require('fs-extra'),
     runExec = require('../utils/exec').runExec,
     
-    // GPIO = require('pi-pins');
+    GPIO = require('pi-pins'),
     moment = require('moment'),
     Promise = require('promise'),
     spawn = require('child_process').spawn,
@@ -29,6 +29,8 @@ function App(fbUrl, pubKey, subKey){
   this.setupThumbnailGenerator();
 
   fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
+
+  this.setupGPIO();
 
   this.setupEventHandlers();
 }

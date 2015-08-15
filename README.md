@@ -2,6 +2,8 @@
 
 Welcome to __snappyapp__ where you can create swarms of cameras and control them individually and all at once.
 
+[Official site](http://brancusi.github.io/snappy/)
+
 ## The stack
 
 1. [resin.io](http://resin.io/) - For provisioning and managing the device fleet

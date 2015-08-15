@@ -6,9 +6,6 @@ ENV APP /usr/src/app
 RUN mkdir -p $APP
 WORKDIR $APP
 
-# We need to install pm2 globally so it can be found.
-RUN npm install pm2 -g
-
 # Install image tools
 RUN apt-get update && apt-get install -y \
   dcraw \
@@ -17,8 +14,11 @@ RUN apt-get update && apt-get install -y \
 # Run npm install here to cache this later for future builds
 COPY package.json $APP/
 
-# Squash the nasty output
+# Run npm install and squash the nasty output.
 RUN DEBIAN_FRONTEND=noninteractive JOBS=MAX npm install --unsafe-perm
+
+# We need to install pm2 globally so it can be found. Squash the nasty output.
+RUN DEBIAN_FRONTEND=noninteractive JOBS=MAX npm install pm2 -g --unsafe-perm
 
 # Copy over app source
 COPY . $APP
@@ -27,4 +27,4 @@ COPY . $APP
 ENV INITSYSTEM on
 
 # Start up the app
-CMD [ "bash", "./start.sh" ]
+CMD [ "bash", "$APP/start.sh" ]

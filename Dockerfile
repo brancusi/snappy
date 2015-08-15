@@ -1,4 +1,4 @@
-FROM resin/raspberrypi2-node:onbuild
+FROM resin/raspberrypi2-node:0.12.4:onbuild
 
 ENV INITSYSTEM on
 

@@ -24,7 +24,9 @@ mod.buildDirectories = function(){
 mod.setupWatch = function(){
   var self = this;
   var fileRegEx = /([^\/]+)(?=\.\w+$)/;
-  var options = {ignored: /[\/\\]\./, persistent: true};
+  var options = {ignored: /[\/\\]\./, 
+                 persistent: true,
+                 followSymlinks: true};
 
   this.debugWatch = chokidar.watch(this.baseDir, options)
   .on('raw', function(event, path, details) { 

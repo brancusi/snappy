@@ -31,6 +31,11 @@ mod.setupWatch = function(){
     console.log('Watching and saw', event, path, details);
   });
 
+  this.relWatch = chokidar.watch('../tmp/images/preview/', options)
+  .on('raw', function(event, path, details) { 
+    console.log('Watching and saw', event, path, details);
+  });
+
   // Watch for preview raw files
   this.rawWatch = chokidar.watch([this.baseDir + '*.nef', this.baseDir + '*.NEF'], options)
   .on('add', function(path) { 

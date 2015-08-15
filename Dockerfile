@@ -30,4 +30,4 @@ COPY . $APP_BASE
 ENV INITSYSTEM on
 
 # Start up the app
-CMD [ "bash", "$APP_BASE/start.sh" ]
+CMD [ "node", "$APP_BASE/server.js" ]

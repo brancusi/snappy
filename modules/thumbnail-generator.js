@@ -25,7 +25,7 @@ mod.setupWatch = function(){
   var self = this;
   var fileRegEx = /([^\/]+)(?=\.\w+$)/;
   var options = {ignored: /[\/\\]\./, persistent: true};
-  var dir = process.env.BASE_IMAGE_DIR;
+  var dir = ;
   
   // Watch for preview raw files
   this.rawWatch = chokidar.watch([dir + 'preview/*.nef', dir + 'preview/*.NEF'], options)

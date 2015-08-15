@@ -9,6 +9,8 @@ var CommandService = require('./command-service'),
     spawn = require('child_process').spawn,
     ThumbnailGenerator = require('./thumbnail-generator');
 
+const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/';
+
 module.exports = App;
 
 var mod = App.prototype;
@@ -28,7 +30,7 @@ function App(fbUrl, pubKey, subKey){
 
   this.setupThumbnailGenerator();
 
-  fs.mkdirs(process.env.BASE_IMAGE_DIR + 'new');
+  fs.mkdirs(TMP_IMAGE_DIR + 'swarm');
 
   this.setupGPIO();
 
@@ -40,7 +42,6 @@ mod.setupEventHandlers = function(){
 }
 
 mod.updateCameraSettings = function(e){
-  console.log('Will try to update settings now');
   this.unTether().then(function(){
     
     var data = e.value();
@@ -58,7 +59,7 @@ mod.updateCameraSettings = function(e){
 
 mod.setupThumbnailGenerator = function(){
   var self = this;
-  this.thumbnailGenerator = new ThumbnailGenerator(process.env.BASE_IMAGE_DIR);
+  this.thumbnailGenerator = new ThumbnailGenerator(TMP_IMAGE_DIR);
   this.thumbnailGenerator.thumbnails.subscribe(self.dataService.updatePreviewImage.bind(self.dataService));
 }
 
@@ -69,11 +70,11 @@ mod.captureImage = function(){
 mod.fileNameFlag = function(type){
   switch(type){
     case 'new':
-      return '--filename='+process.env.BASE_IMAGE_DIR+'new/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+TMP_IMAGE_DIR+'swarm/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
 
     case 'preview':
-      return '--filename='+process.env.BASE_IMAGE_DIR+'preview/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+TMP_IMAGE_DIR+'preview/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }
 }

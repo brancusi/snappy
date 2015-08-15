@@ -33,8 +33,17 @@ mod.setupWatch = function(){
     console.log('Watching and saw', event, path, details);
   });
 
-  console.log('Setting up: ', this.baseDir);
-  this.relWatch = chokidar.watch('/usr/src/app/tmp/images/preview/', options)
+  this.fullWatch = chokidar.watch('/usr/src/app/tmp/images/preview/', options)
+  .on('raw', function(event, path, details) { 
+    console.log('Watching and saw', event, path, details);
+  });
+
+  this.relWatch = chokidar.watch('../tmp/images/preview/', options)
+  .on('raw', function(event, path, details) { 
+    console.log('Watching and saw', event, path, details);
+  });
+
+  this.currentWatch = chokidar.watch('.', options)
   .on('raw', function(event, path, details) { 
     console.log('Watching and saw', event, path, details);
   });

@@ -38,7 +38,7 @@ mod.setupWatch = function(){
   .on('add', function(path) { 
     runExec('dcraw -v -e ' + path)
     .then(function(response){
-      fs.remove(path);
+      // fs.remove(path);
     });
   });
 
@@ -47,7 +47,7 @@ mod.setupWatch = function(){
     var name = fileRegEx.exec(path)[0];
     runExec('convert ' + path + ' -resize 20% ' + self.baseDir + 'upload/' + name + '.jpg')
     .then(function(response){
-      fs.remove(path);
+      // fs.remove(path);
     });
   });
 

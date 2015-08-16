@@ -70,7 +70,7 @@ mod.captureImage = function(){
 mod.fileNameFlag = function(type){
   switch(type){
     case 'new':
-      return '--filename='+SWARM_IMAGE_DIR+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+TMP_IMAGE_DIR+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
 
     case 'preview':

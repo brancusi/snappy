@@ -155,6 +155,7 @@ mod.processUntethered = function(callback, resolve){
   }
 }
 
+
 mod.isTetheredMode = function(){
   return (this.tetheredProcess !== null && this.tetheredProcess !== undefined);
 }

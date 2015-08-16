@@ -112,16 +112,20 @@ mod.tether = function(){
 }
 
 mod.unTether = function(){
-  console.log('Untether');
+  console.log('Entered unTether');
   var self = this;
   return new Promise(function(resolve, reject){
+    console.log('Entered promise');
     if(self.isTetheredMode()){
+      console.log('Tethered so will untether');
       self.tetheredProcess.on('close', function (code, signal) {
+        console.log('OnClose');
         self.tetheredProcess = null;
         resolve('Untethered ok! '+signal);
       });
 
       self.tetheredProcess.on('SIGINT', function (code, signal) {
+        console.log('On SIGINT');
         self.tetheredProcess = null;
         resolve('Untethered ok! '+signal);
       });

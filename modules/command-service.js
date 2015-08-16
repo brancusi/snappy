@@ -47,7 +47,6 @@ mod.generateChannels = function(){
 }
 
 mod.processMessage = function(message, data, channel){
-  
   if(channel !== 'global' && channel !== this.config.deviceUUID){
     return;
   }

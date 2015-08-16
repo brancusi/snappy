@@ -40,7 +40,7 @@ mod.setupWatch = function(){
   this.thumbnailWatch = chokidar.watch(this.baseDir + '*thumb.jpg', options)
   .on('add', function(path, stats) {
     var name = fileRegEx.exec(path)[0];
-    runExec('convert ' + path + ' -resize 20% ' + this.baseDir + 'upload/' + name + '.jpg')
+    runExec('convert ' + path + ' -resize 20% ' + self.baseDir + 'upload/' + name + '.jpg')
     .then(function(response){
       fs.remove(path);
     });

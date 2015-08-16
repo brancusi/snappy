@@ -18,7 +18,7 @@ function ThumbnailGenerator(baseDir){
 }
 
 mod.buildDirectories = function(){
-  fs.mkdirs(this.baseDir + 'upload');
+  fs.mkdirsSync(this.baseDir + 'upload');
 }
 
 mod.setupWatch = function(){
@@ -38,7 +38,7 @@ mod.setupWatch = function(){
   .on('add', function(path) { 
     runExec('dcraw -v -e ' + path)
     .then(function(response){
-      fs.remove(path);
+      // fs.remove(path);
     });
   });
 
@@ -47,7 +47,7 @@ mod.setupWatch = function(){
     var name = fileRegEx.exec(path)[0];
     runExec('convert ' + path + ' -resize 20% ' + self.baseDir + 'upload/' + name + '.jpg')
     .then(function(response){
-      fs.remove(path);
+      // fs.remove(path);
     });
   });
 
@@ -65,7 +65,7 @@ mod.setupWatch = function(){
     }).
     send(function(err, data) {
       if(!err){
-        fs.remove(path);
+        // fs.remove(path);
         self.thumbnails.push(data.Location);
       }
     });

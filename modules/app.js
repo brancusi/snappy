@@ -121,19 +121,19 @@ mod.unTether = function(){
     if(self.isTetheredMode()){
       
       self.tetheredProcess.on('close', function (code, signal) {
-        self.processUntethered(resolve);
+        self.processUntethered('close', resolve);
       });
 
       self.tetheredProcess.on('exit', function (code, signal) {
-        self.processUntethered(resolve);
+        self.processUntethered('exit', resolve);
       });
 
       self.tetheredProcess.on('error', function (code, signal) {
-        self.processUntethered(resolve);
+        self.processUntethered('error', resolve);
       });
 
       self.tetheredProcess.on('SIGINT', function (code, signal) {
-        self.processUntethered(resolve);
+        self.processUntethered('sigint', resolve);
       });
 
       self.tetheredProcess.kill('SIGINT');
@@ -146,10 +146,10 @@ mod.unTether = function(){
   
 }
 
-mod.processUntethered = function(resolve){
-  console.log(resolve.called);
+mod.processUntethered = function(callback, resolve){
+  console.log('resolve.called: ', resolve.called, callback);
   if(!resolve.called){
-    self.tetheredProcess = null;
+    this.tetheredProcess = null;
     resolve.called = true;
     resolve();
   }

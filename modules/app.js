@@ -8,7 +8,7 @@ var CommandService = require('./command-service'),
     ThumbnailGenerator = require('./thumbnail-generator');
 
 if(!process.env.LOCAL_TESTING){
-  var GPIO = require('pi-pins'),
+  var GPIO = require('pi-pins');
 }
 
 const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/preview/';

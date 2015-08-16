@@ -28,9 +28,12 @@ mod.setupWatch = function(){
                  persistent: true,
                  followSymlinks: true};
 
-  this.debugWatch = chokidar.watch('tmp/images/preview/', options)
+  this.debugWatch = chokidar.watch('./tmp/images/preview/', options)
   .on('raw', function(event, path, details) { 
     console.log('Watching and saw', event, path, details);
+  })
+  .on('ready', function(){
+    console.log('Saying ready yo?!');
   });
 
   // Watch for preview raw files

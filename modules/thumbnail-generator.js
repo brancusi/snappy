@@ -52,31 +52,38 @@ mod.setupWatch = function(){
   });
 
   this.uploadwWatch = chokidar.watch(this.baseDir + 'upload/*.jpg', options)
-  .on('add', function(path) { 
-    fs.readFile(path, function(err, data){
-
-      if(err){
-        console.log(err);
-      }else{
-        console.log('Buffer data:', data);
-        var name = fileRegEx.exec(path)[0];
-        var key = name + '.preview.jpg';
-
-        var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
-        s3obj.upload({Body: data})
-        .on('httpUploadProgress', function(evt) { 
-          console.log(evt);
-        })
-        .send(function(err, response) {
-          console.log(err);
-          if(!err){
-            // fs.remove(path);
-            self.thumbnails.push(response.Location);
-          }
-        });
-      }
-      
-    });
-  });
+  .on('add', uploadAndClearFile)
+  .on('change', uploadAndClearFile);
   
+}
+
+function uploadAndClearFile(path){
+  
+  var fileRegEx = /([^\/]+)(?=\.\w+$)/;
+
+  fs.readFile(path, function(err, data){
+    if(err){
+      console.log(err);
+    }else if(data.length === 0){
+      console.log('This buffer is empty, skipping');
+    }else{
+      console.log('Buffer data:', data);
+      var name = fileRegEx.exec(path)[0];
+      var key = name + '.preview.jpg';
+
+      var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
+      s3obj.upload({Body: data})
+      .on('httpUploadProgress', function(evt) { 
+        console.log(evt);
+      })
+      .send(function(err, response) {
+        console.log(err);
+        if(!err){
+          fs.remove(path);
+          self.thumbnails.push(response.Location);
+        }
+      });
+    }
+    
+  });
 }

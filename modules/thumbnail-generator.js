@@ -66,12 +66,12 @@ mod.setupWatch = function(){
         s3obj.upload({Body: data})
         .on('httpUploadProgress', function(evt) { 
           console.log(evt);
-        }).
-        send(function(err, data) {
+        })
+        .send(function(err, response) {
           console.log(err);
           if(!err){
-            fs.remove(path);
-            self.thumbnails.push(data.Location);
+            // fs.remove(path);
+            self.thumbnails.push(response.Location);
           }
         });
       }

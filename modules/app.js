@@ -81,6 +81,7 @@ mod.fileNameFlag = function(type){
 
 mod.tether = function(){
   console.log('Tether');
+  var self = this;
   if(!this.isTetheredMode()){
     try{
       var options = {
@@ -99,6 +100,7 @@ mod.tether = function(){
 
       gPhoto2.stderr.on('data', function (data) {
         console.log('stderr: ' + data);
+        self.unTether();
       });
 
       this.tetheredProcess = gPhoto2;
@@ -117,17 +119,21 @@ mod.unTether = function(){
   return new Promise(function(resolve, reject){
     console.log('Entered promise');
     if(self.isTetheredMode()){
-      console.log('Tethered so will untether');
+      
       self.tetheredProcess.on('close', function (code, signal) {
-        console.log('OnClose');
-        self.tetheredProcess = null;
-        resolve('Untethered ok! '+signal);
+        self.processUntethered(resolve);
+      });
+
+      self.tetheredProcess.on('exit', function (code, signal) {
+        self.processUntethered(resolve);
+      });
+
+      self.tetheredProcess.on('error', function (code, signal) {
+        self.processUntethered(resolve);
       });
 
       self.tetheredProcess.on('SIGINT', function (code, signal) {
-        console.log('On SIGINT');
-        self.tetheredProcess = null;
-        resolve('Untethered ok! '+signal);
+        self.processUntethered(resolve);
       });
 
       self.tetheredProcess.kill('SIGINT');
@@ -138,6 +144,15 @@ mod.unTether = function(){
     }
   });
   
+}
+
+mod.processUntethered = function(resolve){
+  console.log(resolve.called);
+  if(!resolve.called){
+    self.tetheredProcess = null;
+    resolve.called = true;
+    resolve();
+  }
 }
 
 mod.isTetheredMode = function(){

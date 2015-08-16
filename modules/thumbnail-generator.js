@@ -28,16 +28,8 @@ mod.setupWatch = function(){
                  persistent: true,
                  followSymlinks: true};
 
-  this.debugWatch = chokidar.watch('./tmp/images/preview/', options)
-  .on('raw', function(event, path, details) { 
-    console.log('Watching and saw', event, path, details);
-  })
-  .on('ready', function(){
-    console.log('Saying ready yo?!');
-  });
-
   // Watch for preview raw files
-  this.rawWatch = chokidar.watch(['tmp/images/preview/' + '*.nef', 'tmp/images/preview/' + '*.NEF'], options)
+  this.rawWatch = chokidar.watch([this.baseDir + '*.nef', this.baseDir + '*.NEF'], options)
   .on('add', function(path) { 
     runExec('dcraw -v -e ' + path)
     .then(function(response){
@@ -45,7 +37,7 @@ mod.setupWatch = function(){
     });
   });
 
-  this.thumbnailWatch = chokidar.watch('tmp/images/preview/*thumb.jpg', options)
+  this.thumbnailWatch = chokidar.watch(this.baseDir + '*thumb.jpg', options)
   .on('add', function(path, stats) {
     var name = fileRegEx.exec(path)[0];
     runExec('convert ' + path + ' -resize 20% ' + this.baseDir + 'upload/' + name + '.jpg')
@@ -54,7 +46,7 @@ mod.setupWatch = function(){
     });
   });
 
-  this.uploadwWatch = chokidar.watch('tmp/images/preview/upload/*.jpg', options)
+  this.uploadwWatch = chokidar.watch(this.baseDir + 'upload/*.jpg', options)
   .on('add', function(path) { 
 
     var body = fs.createReadStream(path);

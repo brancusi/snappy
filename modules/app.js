@@ -8,8 +8,8 @@ var CommandService = require('./command-service'),
     spawn = require('child_process').spawn,
     ThumbnailGenerator = require('./thumbnail-generator');
 
-const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/preview/';
-const SWRAM_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/swarm/';
+const TMP_IMAGE_DIR = './tmp/images/preview/';
+const SWRAM_IMAGE_DIR = './tmp/images/swarm/';
 
 module.exports = App;
 

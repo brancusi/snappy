@@ -1,7 +1,7 @@
 var CommandService = require('./command-service'),
     DataService = require('./data-service'),
     fs = require('fs-extra'),
-    // GPIO = require('pi-pins'),
+    GPIO = require('pi-pins'),
     runExec = require('../utils/exec').runExec,
     moment = require('moment'),
     Promise = require('promise'),
@@ -32,7 +32,7 @@ function App(fbUrl, pubKey, subKey){
 
   fs.mkdirs(SWRAM_IMAGE_DIR);
 
-  // this.setupGPIO();
+  this.setupGPIO();
 
   this.setupEventHandlers();
 }

@@ -7,9 +7,9 @@ var CommandService = require('./command-service'),
     spawn = require('child_process').spawn,
     ThumbnailGenerator = require('./thumbnail-generator');
 
-if(!process.env.LOCAL_TESTING){
-  var GPIO = require('pi-pins'),
-}
+// if(!process.env.LOCAL_TESTING){
+//   var GPIO = require('pi-pins'),
+// }
 
 const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/preview/';
 const SWRAM_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/swarm/';

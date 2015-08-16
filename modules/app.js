@@ -74,7 +74,7 @@ mod.fileNameFlag = function(type){
     break;
 
     case 'preview':
-      return '--filename='+'/usr/src/app/tmp/images/preview/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+'/usr/src/app/tmp/images/goofg/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }
 }

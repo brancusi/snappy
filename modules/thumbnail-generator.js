@@ -18,7 +18,7 @@ function ThumbnailGenerator(baseDir){
 }
 
 mod.buildDirectories = function(){
-  fs.mkdirs(this.baseDir + 'upload');
+  fs.mkdirs(this.baseDir + 'goofwhat');
 }
 
 mod.setupWatch = function(){

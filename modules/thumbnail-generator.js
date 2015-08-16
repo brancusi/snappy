@@ -52,13 +52,13 @@ mod.setupWatch = function(){
   });
 
   this.uploadwWatch = chokidar.watch(this.baseDir + 'upload/*.jpg', options)
-  .on('add', uploadAndClearFile)
-  .on('change', uploadAndClearFile);
+  .on('add', this.uploadAndClearFile.bind(this))
+  .on('change', this.uploadAndClearFile.bind(this));
   
 }
 
-function uploadAndClearFile(path){
-  
+mod.uploadAndClearFile(path){
+  var self = this;
   var fileRegEx = /([^\/]+)(?=\.\w+$)/;
 
   fs.readFile(path, function(err, data){

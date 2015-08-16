@@ -38,7 +38,7 @@ mod.setupWatch = function(){
   .on('add', function(path) { 
     runExec('dcraw -v -e ' + path)
     .then(function(response){
-      // fs.remove(path);
+      fs.remove(path);
     });
   });
 
@@ -47,27 +47,28 @@ mod.setupWatch = function(){
     var name = fileRegEx.exec(path)[0];
     runExec('convert ' + path + ' -resize 20% ' + self.baseDir + 'upload/' + name + '.jpg')
     .then(function(response){
-      // fs.remove(path);
+      fs.remove(path);
     });
   });
 
   this.uploadwWatch = chokidar.watch(this.baseDir + 'upload/*.jpg', options)
   .on('add', function(path) { 
+    fs.readFile(path, function(data){
+      var name = fileRegEx.exec(path)[0];
+      var key = name + '.preview.jpg';
 
-    var body = fs.createReadStream(path);
-    var name = fileRegEx.exec(path)[0];
-    var key = name + '.preview.jpg';
-
-    var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
-    s3obj.upload({Body: body})
-    .on('httpUploadProgress', function(evt) { 
-      // console.log(evt); 
-    }).
-    send(function(err, data) {
-      if(!err){
-        // fs.remove(path);
-        self.thumbnails.push(data.Location);
-      }
+      var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
+      s3obj.upload({Body: data})
+      .on('httpUploadProgress', function(evt) { 
+        console.log(evt);
+      }).
+      send(function(err, data) {
+        console.log(err);
+        if(!err){
+          fs.remove(path);
+          self.thumbnails.push(data.Location);
+        }
+      });
     });
   });
   

@@ -16,4 +16,8 @@ Welcome to __snappyapp__ where you can create swarms of cameras and control them
 
 1. [Raspberry Pi 2 Model B](https://www.raspberrypi.org/products/raspberry-pi-2-model-b/)
 1. Your camera of choice. [Supported gphoto2](http://www.gphoto.org/doc/remote/)
-1. For remote triggering
+1. A breadboard
+1. 1 - PN2222A - Transistor
+1. 1 - 900k Ω - Resistor
+1. 1 - Diode
+1. 

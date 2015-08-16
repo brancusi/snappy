@@ -18,7 +18,7 @@ function ThumbnailGenerator(baseDir){
 }
 
 mod.buildDirectories = function(){
-  fs.mkdirs(this.baseDir + 'goofwhat');
+  fs.mkdirs(this.baseDir + 'upload');
 }
 
 mod.setupWatch = function(){
@@ -27,6 +27,11 @@ mod.setupWatch = function(){
   var options = {ignored: /[\/\\]\./, 
                  persistent: true,
                  followSymlinks: true};
+
+  this.debugWatcher = chokidar.watch(this.baseDir, options)
+  .on('change', function(path, stats) {
+    console.log('Debug watcher', path, 'changed size to', stats);
+  });
 
   // Watch for preview raw files
   this.rawWatch = chokidar.watch([this.baseDir + '*.nef', this.baseDir + '*.NEF'], options)

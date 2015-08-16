@@ -8,8 +8,8 @@ var CommandService = require('./command-service'),
     spawn = require('child_process').spawn,
     ThumbnailGenerator = require('./thumbnail-generator');
 
-const TMP_IMAGE_DIR = './tmp/images/preview/';
-const SWARM_IMAGE_DIR = './tmp/images/swarm/';
+const TMP_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/preview/';
+const SWARM_IMAGE_DIR = process.env.APP_BASE + '/tmp/images/swarm/';
 
 module.exports = App;
 
@@ -74,7 +74,7 @@ mod.fileNameFlag = function(type){
     break;
 
     case 'preview':
-      return '--filename='+'/usr/src/app/tmp/images/goofg/'+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
+      return '--filename='+TMP_IMAGE_DIR+process.env.RESIN_DEVICE_UUID+'_%m_%d_%y_%H_%M_%S.%C';
     break;
   }
 }

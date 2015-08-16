@@ -35,9 +35,9 @@ function App(fbUrl, pubKey, subKey){
 
   fs.mkdirs(SWRAM_IMAGE_DIR);
 
-  if(!process.env.LOCAL_TESTING){
-    this.setupGPIO();
-  }
+  // if(!process.env.LOCAL_TESTING){
+  //   this.setupGPIO();
+  // }
 
   this.setupEventHandlers();
 }

@@ -124,6 +124,7 @@ mod.unTether = function(){
 
       self.tetheredProcess.kill('SIGINT');
     }else{
+      self.tetheredProcess = null;
       resolve();
     }
   });

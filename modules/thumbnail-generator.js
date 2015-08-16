@@ -54,21 +54,28 @@ mod.setupWatch = function(){
   this.uploadwWatch = chokidar.watch(this.baseDir + 'upload/*.jpg', options)
   .on('add', function(path) { 
     fs.readFile(path, function(err, data){
-      var name = fileRegEx.exec(path)[0];
-      var key = name + '.preview.jpg';
 
-      var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
-      s3obj.upload({Body: data})
-      .on('httpUploadProgress', function(evt) { 
-        console.log(evt);
-      }).
-      send(function(err, data) {
+      if(err){
         console.log(err);
-        if(!err){
-          fs.remove(path);
-          self.thumbnails.push(data.Location);
-        }
-      });
+      }else{
+        console.log('Buffer data:', data);
+        var name = fileRegEx.exec(path)[0];
+        var key = name + '.preview.jpg';
+
+        var s3obj = new AWS.S3({params: {Bucket: 'snappyapp', Key: key}});
+        s3obj.upload({Body: data})
+        .on('httpUploadProgress', function(evt) { 
+          console.log(evt);
+        }).
+        send(function(err, data) {
+          console.log(err);
+          if(!err){
+            fs.remove(path);
+            self.thumbnails.push(data.Location);
+          }
+        });
+      }
+      
     });
   });
   

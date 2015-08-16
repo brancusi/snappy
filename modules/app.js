@@ -80,6 +80,7 @@ mod.fileNameFlag = function(type){
 }
 
 mod.tether = function(){
+  console.log('Tether');
   if(!this.isTetheredMode()){
     try{
       var options = {
@@ -105,10 +106,13 @@ mod.tether = function(){
     }catch(err){
       console.log('Error tethering', err);
     }
+  }else{
+    console.log('Already tethered');
   }
 }
 
 mod.unTether = function(){
+  console.log('Untether');
   var self = this;
   return new Promise(function(resolve, reject){
     if(self.isTetheredMode()){
@@ -124,6 +128,7 @@ mod.unTether = function(){
 
       self.tetheredProcess.kill('SIGINT');
     }else{
+      console.log('Already Untethered so resolving');
       self.tetheredProcess = null;
       resolve();
     }

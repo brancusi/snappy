@@ -53,7 +53,7 @@ mod.setupWatch = function(){
 
   this.uploadwWatch = chokidar.watch(this.baseDir + 'upload/*.jpg', options)
   .on('add', function(path) { 
-    fs.readFile(path, function(data){
+    fs.readFile(path, function(err, data){
       var name = fileRegEx.exec(path)[0];
       var key = name + '.preview.jpg';
 

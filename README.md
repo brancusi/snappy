@@ -4,6 +4,9 @@ __Snapper__ allows you to create swarms of cameras that can be controlled and tr
 
 Using the Raspberry Pi platform, each camera becomes an autonamous node in the cluster that manages its own image processing and uploading of syncronized swarm pictures.
 
+![Landing](http://wildsnapper.s3.amazonaws.com/Screen%20Shot%202015-08-16%20at%209.17.04%20PM.png)
+![Swarm](http://wildsnapper.s3.amazonaws.com/Screen%20Shot%202015-08-16%20at%209.17.20%20PM.png)
+
 [Official site](http://brancusi.github.io/snappy/)
 
 ## The stack

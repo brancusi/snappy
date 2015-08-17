@@ -20,9 +20,14 @@
 
     <section class="main-content">
       <h1>
-<a id="gphoto--rpi2--emberjs" class="anchor" href="#gphoto--rpi2--emberjs" aria-hidden="true"><span class="octicon octicon-link"></span></a>gPhoto + RPi2 + Emberjs</h1>
+<a id="snapper---rpi2--node--gphoto2" class="anchor" href="#snapper---rpi2--node--gphoto2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Snapper - RPi2 + Node + gPhoto2</h1>
 
-<p>Welcome to <strong>snappyapp</strong> where you can create swarms of cameras and control them individually and all at once.</p>
+<p><strong>Snapper</strong> allows you to create swarms of cameras that can be controlled and triggered through a simple web interface.</p>
+
+<p>Using the Raspberry Pi platform, each camera becomes an autonamous node in the cluster that manages its own image processing and uploading of syncronized swarm pictures.</p>
+
+<p><img src="http://wildsnapper.s3.amazonaws.com/Screen%20Shot%202015-08-16%20at%209.17.04%20PM.png" alt="Landing">
+<img src="http://wildsnapper.s3.amazonaws.com/Screen%20Shot%202015-08-16%20at%209.17.20%20PM.png" alt="Swarm"></p>
 
 <p><a href="http://brancusi.github.io/snappy/">Official site</a></p>
 
@@ -49,8 +54,81 @@
 <li><a href="https://www.raspberrypi.org/products/raspberry-pi-2-model-b/">Raspberry Pi 2 Model B</a></li>
 <li>Your camera of choice. <a href="http://www.gphoto.org/doc/remote/">Supported gphoto2</a>
 </li>
-<li>For remote triggering</li>
 </ol>
+
+<p>For fast shutter capture <strong>snapper</strong> uses GPIO on the RPi-2. This is useful when using a flash or when more than 1 camera is involved in the setup and precise timing is required.</p>
+
+<h3>
+<a id="curcuit-diagram" class="anchor" href="#curcuit-diagram" aria-hidden="true"><span class="octicon octicon-link"></span></a>Curcuit diagram</h3>
+
+<p><img src="http://wildsnapper.s3.amazonaws.com/transistor-study.svg" alt="RPi-2 Switch Curcuit"></p>
+
+<h3>
+<a id="parts" class="anchor" href="#parts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Parts</h3>
+
+<ol>
+<li>1 - PN2222A - Transistor</li>
+<li>1 - 1m Ω - Resistor</li>
+<li>Jumper wires</li>
+</ol>
+
+<h2>
+<a id="software-setup" class="anchor" href="#software-setup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Software setup</h2>
+
+<p>Snapper was built and tested using <a href="http://resin.io">resin.io</a>. This allows for super easy provisioning of the Pi2.</p>
+
+<h3>
+<a id="raspberry-pi-2---setup-resinio" class="anchor" href="#raspberry-pi-2---setup-resinio" aria-hidden="true"><span class="octicon octicon-link"></span></a>Raspberry Pi 2 - Setup (Resin.io)</h3>
+
+<ol>
+<li>Setup an account at resin.io</li>
+<li>Follow their instructions for setting up the base device OS: <a href="http://docs.resin.io/#/pages/installing/gettingStarted.md">guide</a>. Pay close attention to the wifi setting if you are going wireless.</li>
+<li>Make note of the remote branch for your app on resin. We will use this in the coming steps</li>
+<li>Clone snapper <code>git clone git@github.com:brancusi/snappy.git</code>
+</li>
+<li>Now add the remote branch listed on resin under your new app: <code>git remote add resin &lt;RESIN REPO URL&gt;</code>
+</li>
+<li>You can now push code to your device using: <code>git push resin</code>
+</li>
+<li>Magic!</li>
+</ol>
+
+<h3>
+<a id="setting-up-pubnub" class="anchor" href="#setting-up-pubnub" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting up Pubnub</h3>
+
+<p>For pub/sub <strong>snapper</strong> uses <a href="http://pubnub.com">Pubnub</a></p>
+
+<ol>
+<li>Setup free dev account at pubnub</li>
+<li>Copy your access keys from your pubnub dashboard</li>
+<li>Refer to the env vars below and add the info through the resin.io dashboard</li>
+</ol>
+
+<h3>
+<a id="setting-up-firebase" class="anchor" href="#setting-up-firebase" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting up firebase</h3>
+
+<p>For the data layer <strong>snapper</strong> uses <a href="http://firebase.com">Firebase</a></p>
+
+<ol>
+<li>Setup free dev account at firebase</li>
+<li>Refer to the env vars below and add the info through the resin.io dashboard</li>
+</ol>
+
+<h3>
+<a id="env-vars-used-by-your-device" class="anchor" href="#env-vars-used-by-your-device" aria-hidden="true"><span class="octicon octicon-link"></span></a>ENV Vars used by your device</h3>
+
+<pre><code>FIREBASE_URL=https://&lt;YOUR_APP&gt;.firebaseio.com/
+
+PUBNUB_PUBLISH_KEY=YOUR_PUB_KEY
+PUBNUB_SUBSCRIBE_KEY=YOU_SUB_KEY
+
+SWARM_ID=YOUR_SWARM_NAME
+
+AWS_ACCESS_KEY_ID=AWS_KEY
+AWS_SECRET_ACCESS_KEY=AWS_SECRET
+
+NODE_NAME=NAME_OF_THIS_NODE
+</code></pre>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/brancusi/snappy">Snappy</a> is maintained by <a href="https://github.com/brancusi">brancusi</a>.</span>

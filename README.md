@@ -1,8 +1,8 @@
 # Snapper - RPi2 + gPhoto + Emberjs
 
-## __Snapper__ allows you to create swarms of cameras that can be controlled and triggered through a simple web interface.
+__Snapper__ allows you to create swarms of cameras that can be controlled and triggered through a simple web interface.
 
-### Using the Raspberry Pi platform, each camera becomes an autonamous node in the cluster that manages its own image processing and uploading of syncronized swarm pictures.
+Using the Raspberry Pi platform, each camera becomes an autonamous node in the cluster that manages its own image processing and uploading of syncronized swarm pictures.
 
 [Official site](http://brancusi.github.io/snappy/)
 
@@ -19,7 +19,7 @@
 1. [Raspberry Pi 2 Model B](https://www.raspberrypi.org/products/raspberry-pi-2-model-b/)
 1. Your camera of choice. [Supported gphoto2](http://www.gphoto.org/doc/remote/)
 
-## For fast shutter capture __snapper__ uses GPIO on the RPi-2. This is useful when using a flash or when more than 1 camera is involved in the setup and precise timing is required.
+For fast shutter capture __snapper__ uses GPIO on the RPi-2. This is useful when using a flash or when more than 1 camera is involved in the setup and precise timing is required.
 
 ### Curcuit diagram
 

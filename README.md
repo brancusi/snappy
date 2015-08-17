@@ -1,8 +1,10 @@
 # Snapper - RPi2 + Node + gPhoto2
 
+### Please note there is a lot missing from these docs right now. More to come soon.
+
 __Snapper__ allows you to create swarms of cameras that can be controlled and triggered through a simple web interface.
 
-Using the Raspberry Pi platform, each camera becomes an autonamous node in the cluster that manages its own image processing and uploading of syncronized swarm pictures.
+Using the Raspberry Pi platform, each camera becomes an autonomous node in the cluster that manages its own image processing and uploading of synchronized swarm pictures.
 
 ![Landing](http://wildsnapper.s3.amazonaws.com/Screen%20Shot%202015-08-16%20at%209.17.04%20PM.png)
 ![Swarm](http://wildsnapper.s3.amazonaws.com/Screen%20Shot%202015-08-16%20at%209.17.20%20PM.png)
@@ -14,7 +16,7 @@ Using the Raspberry Pi platform, each camera becomes an autonamous node in the c
 1. [resin.io](http://resin.io/) - For provisioning and managing the device fleet
 1. [pubnub](https://www.pubnub.com/) - For the pub/sub and command triggering
 1. [firebase](https://www.firebase.com/) - For the data layer
-1. [auth0](https://auth0.com/) - For user identity managment of the swarm admin
+1. [auth0](https://auth0.com/) - For user identity management of the swarm admin
 1. [emberjs](https://emberjs.com/) - For the swarm admin app
 
 ## Hardware Setup
@@ -24,9 +26,9 @@ Using the Raspberry Pi platform, each camera becomes an autonamous node in the c
 
 For fast shutter capture __snapper__ uses GPIO on the RPi-2. This is useful when using a flash or when more than 1 camera is involved in the setup and precise timing is required.
 
-### Curcuit diagram
+### Circuit diagram
 
-![RPi-2 Switch Curcuit](http://wildsnapper.s3.amazonaws.com/transistor-study.svg)
+![RPi-2 Switch Circuit](http://wildsnapper.s3.amazonaws.com/transistor-study.svg)
 
 ### Parts
 1. 1 - PN2222A - Transistor

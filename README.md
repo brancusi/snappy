@@ -1,4 +1,4 @@
-# Snapper - RPi2 + gPhoto + Emberjs
+# Snapper - RPi2 + Node + gPhoto2
 
 __Snapper__ allows you to create swarms of cameras that can be controlled and triggered through a simple web interface.
 

@@ -26,7 +26,7 @@ For fast shutter capture __snapper__ uses GPIO on the RPi-2. This is useful when
 
 ### Curcuit diagram
 
-![RPi-2 Switch Curcuit](https://s3.amazonaws.com/wildsnapper/curcuit.pdf)
+![RPi-2 Switch Curcuit](http://wildsnapper.s3.amazonaws.com/transistor-study.svg)
 
 ### Parts
 1. 1 - PN2222A - Transistor
